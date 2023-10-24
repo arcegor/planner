@@ -2,6 +2,7 @@ package vkr.planner.service.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
+import vkr.planner.model.DocumentDto;
 import vkr.planner.model.Plan;
 import vkr.planner.model.Rule;
 import vkr.planner.model.Task;
@@ -33,5 +34,9 @@ public class CheckServiceImpl implements CheckService {
     public boolean checkCosts(@NotNull Plan plan){
         return plan.getTaskList().stream().map(Task::getCosts)
                 .reduce(0, Integer::sum) <= plan.getMaxCosts();
+    }
+    public boolean checkDocumentCosts(@NotNull DocumentDto documentDto){
+        return documentDto.getEventList().stream().map(Task::getCosts)
+                .reduce(0, Integer::sum) <= documentDto.getMaxCosts();
     }
 }

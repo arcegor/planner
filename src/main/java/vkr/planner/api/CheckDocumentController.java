@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import vkr.planner.model.DocumentDto;
+import vkr.planner.service.impl.CheckServiceImpl;
 import vkr.planner.utils.ExcelUtils;
 
 import java.io.IOException;
@@ -22,15 +23,21 @@ public class CheckDocumentController {
     @Autowired
     private ExcelUtils excelUtils;
 
+    @Autowired
+    private CheckServiceImpl checkService;
+
     @RequestMapping(value = "/upload", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public void uploadFile(
             @RequestParam(value = "key") String key,
             @RequestParam(value = "file") @Nullable MultipartFile file) throws IOException, SpreadsheetReadException, InvalidFormatException {
         if (file != null){
             DocumentDto documentDto = ExcelUtils.parseExcel(file.getInputStream());
+            System.out.println(key);
             System.out.println(documentDto);
+            System.out.println(checkService.checkDocumentCosts(documentDto));
         }
-        System.out.println(key);
+
+
     }
 
 }
