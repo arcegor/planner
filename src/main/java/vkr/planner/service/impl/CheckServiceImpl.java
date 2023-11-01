@@ -11,8 +11,9 @@ import vkr.planner.service.CheckService;
 import java.util.Comparator;
 import java.util.List;
 
-@Service
 public class CheckServiceImpl implements CheckService {
+
+    public static final String REQUEST_TYPE = "plan";
 
     @Override
     public boolean checkPlanByRule(Plan plan, @NotNull Rule rule) {
@@ -22,6 +23,17 @@ public class CheckServiceImpl implements CheckService {
             case COSTS -> checkCosts(plan);
         };
     }
+    @Override
+    public boolean check() {
+        return false;
+    }
+
+    @Override
+    public CheckService getInstance(String requestType) {
+        if (requestType.equals(REQUEST_TYPE)) return new CheckServiceImpl();
+        return null;
+    }
+
     public boolean checkOrder(@NotNull Plan plan){
         List<Task> taskList = plan.getTaskList();
         return taskList.stream().sorted(Comparator
@@ -34,9 +46,5 @@ public class CheckServiceImpl implements CheckService {
     public boolean checkCosts(@NotNull Plan plan){
         return plan.getTaskList().stream().map(Task::getCosts)
                 .reduce(0, Integer::sum) <= plan.getMaxCosts();
-    }
-    public boolean checkDocumentCosts(@NotNull DocumentDto documentDto){
-        return documentDto.getEventList().stream().map(Task::getCosts)
-                .reduce(0, Integer::sum) <= documentDto.getMaxCosts();
     }
 }

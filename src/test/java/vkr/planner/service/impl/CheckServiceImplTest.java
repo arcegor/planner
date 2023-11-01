@@ -56,5 +56,9 @@ class CheckServiceImplTest {
         assertTrue(checkService.checkPlanByRule(plan3, order));
         assertFalse(checkService.checkPlanByRule(plan3, duration));
         assertTrue(checkService.checkPlanByRule(plan3, costs));
+
+        assertTrue(checkService.checkPlanByRules(plan1));
+        assertFalse(checkService.checkPlanByRules(plan2));
+        assertFalse(checkService.checkPlanByRules(plan3));
     }
 }

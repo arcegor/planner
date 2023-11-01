@@ -1,8 +1,6 @@
 package vkr.planner.utils;
 
-import io.github.millij.poi.SpreadsheetReadException;
-import io.github.millij.poi.ss.reader.XlsReader;
-import org.apache.poi.hssf.usermodel.HSSFRow;
+
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.ss.usermodel.Cell;
@@ -12,7 +10,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
 import vkr.planner.model.DocumentDto;
-import vkr.planner.model.Event;
 
 import java.io.IOException;
 import java.io.InputStream;
