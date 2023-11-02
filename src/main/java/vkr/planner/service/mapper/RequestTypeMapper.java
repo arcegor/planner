@@ -1,10 +1,11 @@
-package vkr.planner.service;
+package vkr.planner.service.mapper;
 
 import jakarta.annotation.PostConstruct;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vkr.planner.exception.UnknownTypeException;
+import vkr.planner.service.CheckService;
 
 import java.util.List;
 import java.util.Map;

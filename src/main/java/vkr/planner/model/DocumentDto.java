@@ -1,6 +1,7 @@
 package vkr.planner.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.text.ParseException;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class DocumentDto extends Plan{
@@ -25,24 +27,12 @@ public class DocumentDto extends Plan{
         super(name);
     }
 
-    public String getId() {
-        return id;
-    }
-
     public void setId(String id) {
         this.id = id;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public List<Event> getEventList() {
-        return eventList;
     }
 
     public void setEventList(List<Event> eventList) {

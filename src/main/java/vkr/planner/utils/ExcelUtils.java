@@ -9,7 +9,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
-import vkr.planner.model.DocumentDto;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,8 +19,7 @@ import java.util.Map;
 
 @Component
 public class ExcelUtils {
-    public static DocumentDto parseExcel(InputStream inputStream) throws IOException, InvalidFormatException {
-        DocumentDto documentDto = new DocumentDto();
+    public static Map<Integer, List<String>> parseExcelFromInputStreamToMap(InputStream inputStream) throws IOException, InvalidFormatException {
         OPCPackage pkg = OPCPackage.open(inputStream);
         XSSFWorkbook workbook = new XSSFWorkbook(pkg);
         Sheet sheet = workbook.getSheetAt(0);
@@ -49,7 +47,6 @@ public class ExcelUtils {
             }
             i++;
         }
-        documentDto.convertToDto(data);
-        return documentDto;
+        return data;
     }
 }

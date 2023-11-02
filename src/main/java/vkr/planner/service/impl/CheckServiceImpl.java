@@ -2,8 +2,7 @@ package vkr.planner.service.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import vkr.planner.model.DocumentDto;
+import vkr.planner.model.CheckRequest;
 import vkr.planner.model.Plan;
 import vkr.planner.model.Rule;
 import vkr.planner.model.Task;
@@ -28,7 +27,7 @@ public class CheckServiceImpl implements CheckService {
         };
     }
     @Override
-    public String check() {
+    public String check(CheckRequest checkRequest) {
         return CHECK_RESPONSE;
     }
     @Override
