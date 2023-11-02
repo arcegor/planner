@@ -29,7 +29,9 @@ public class CheckDocumentController {
     public ResponseEntity<String> uploadFile(
             @ModelAttribute CheckRequest checkRequest) throws UnknownTypeException, IOException, InvalidFormatException, ConvertToDtoException {
 
+        logger.info(">>> Получен запрос с параметрами {}", checkRequest.toString());
         if (checkRequest.getRequestFile() == null || checkRequest.getRequestType() == null){
+            logger.info(">>> Тело запроса пустое! {}", checkRequest.toString());
             return new ResponseEntity<>(checkRequest.toString(), HttpStatus.BAD_REQUEST);
         }
         processCheck.process(checkRequest);

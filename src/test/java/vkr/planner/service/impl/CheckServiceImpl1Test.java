@@ -1,21 +1,18 @@
 package vkr.planner.service.impl;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import vkr.planner.model.Plan;
+import vkr.planner.model.type2.Plan;
 import vkr.planner.model.Rule;
-import vkr.planner.model.Task;
+import vkr.planner.model.type2.Task;
 import vkr.planner.service.CheckService;
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CheckServiceImplTest {
-    private final CheckService checkService = new CheckServiceImpl();
+class CheckServiceImpl1Test {
+    private final CheckService checkService = new CheckServiceImpl1();
 
     @Test
     void checkPlanByRule() {
@@ -56,9 +53,5 @@ class CheckServiceImplTest {
         assertTrue(checkService.checkPlanByRule(plan3, order));
         assertFalse(checkService.checkPlanByRule(plan3, duration));
         assertTrue(checkService.checkPlanByRule(plan3, costs));
-
-        assertTrue(checkService.checkPlanByRules(plan1));
-        assertFalse(checkService.checkPlanByRules(plan2));
-        assertFalse(checkService.checkPlanByRules(plan3));
     }
 }

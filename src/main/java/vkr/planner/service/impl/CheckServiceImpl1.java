@@ -3,16 +3,16 @@ package vkr.planner.service.impl;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import vkr.planner.model.CheckRequest;
-import vkr.planner.model.Plan;
+import vkr.planner.model.type2.Plan;
 import vkr.planner.model.Rule;
-import vkr.planner.model.Task;
+import vkr.planner.model.type2.Task;
 import vkr.planner.service.CheckService;
 
 import java.util.Comparator;
 import java.util.List;
 
 @Component
-public class CheckServiceImpl implements CheckService {
+public class CheckServiceImpl1 implements CheckService {
 
     public static final String REQUEST_TYPE = "Первый";
 

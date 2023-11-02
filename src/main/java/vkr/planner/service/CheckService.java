@@ -5,8 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import vkr.planner.exception.ConvertToDtoException;
 import vkr.planner.model.CheckRequest;
-import vkr.planner.model.DocumentDto;
-import vkr.planner.model.Plan;
+import vkr.planner.model.type2.Plan;
 import vkr.planner.model.Rule;
 
 import java.io.IOException;

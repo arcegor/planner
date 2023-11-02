@@ -22,8 +22,16 @@ public class CheckRequest implements Serializable {
     @JsonProperty(value = "requestFile")
     private MultipartFile requestFile;
 
+    @JsonProperty(value = "resultType")
+    private ResultType resultType;
+
     public CheckRequest(String requestType, String requestData) {
         this.requestType = requestType;
         this.requestData = requestData;
+    }
+
+    public enum ResultType{
+        SUCCESS,
+        FAILED
     }
 }

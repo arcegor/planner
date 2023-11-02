@@ -1,4 +1,4 @@
-package vkr.planner.model;
+package vkr.planner.model.type2;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

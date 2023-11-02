@@ -1,10 +1,13 @@
-package vkr.planner.model;
+package vkr.planner.model.type1;
 
+import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
+import vkr.planner.model.type2.Task;
 
 import java.time.Duration;
 import java.util.Date;
-public class Event extends Task{
+@Getter
+public class Event extends Task {
     private int id;
     @DateTimeFormat
     private Date date; // дата начала
@@ -14,21 +17,15 @@ public class Event extends Task{
         this.id = id;
         this.date = date;
     }
-    public int getId() {
-        return id;
-    }
+
     public void setId(int id) {
         this.id = id;
     }
-    public Date getDate() {
-        return date;
-    }
+
     public void setDate(Date date) {
         this.date = date;
     }
-    public boolean isPassed() {
-        return passed;
-    }
+
     public void setPassed(boolean passed) {
         this.passed = passed;
     }

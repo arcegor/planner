@@ -1,22 +1,21 @@
-package vkr.planner.model;
+package vkr.planner.model.type1;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import vkr.planner.model.type2.Plan;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DocumentDto extends Plan{
+public class DocumentDto extends Plan {
 
     private String id;
     private List<Event> eventList = new ArrayList<>();

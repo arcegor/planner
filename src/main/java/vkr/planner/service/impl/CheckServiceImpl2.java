@@ -1,17 +1,15 @@
 package vkr.planner.service.impl;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import vkr.planner.exception.ConvertToDtoException;
 import vkr.planner.model.CheckRequest;
-import vkr.planner.model.DocumentDto;
-import vkr.planner.model.Plan;
+import vkr.planner.model.type1.DocumentDto;
+import vkr.planner.model.type2.Plan;
 import vkr.planner.model.Rule;
 import vkr.planner.service.CheckService;
 import vkr.planner.utils.ExcelUtils;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -38,9 +36,14 @@ public class CheckServiceImpl2 implements CheckService<DocumentDto> {
         catch (Exception exception){
             throw new ConvertToDtoException(exception.getMessage());
         }
-        if (Objects.equals(checkRequest.getRequestData(), "Успех"))
+        if (Objects.equals(checkRequest.getRequestData(), "Успех")){
+            checkRequest.setResultType(CheckRequest.ResultType.SUCCESS);
             return CHECK_RESPONSE_SUCCESS;
-        else return CHECK_RESPONSE_FAILED;
+        }
+        else {
+            checkRequest.setResultType(CheckRequest.ResultType.FAILED);
+            return CHECK_RESPONSE_FAILED;
+        }
     }
     @Override
     public String getRequestType() {

@@ -10,8 +10,6 @@ import vkr.planner.exception.UnknownTypeException;
 import vkr.planner.model.CheckRequest;
 import vkr.planner.service.CheckService;
 import vkr.planner.service.mapper.RequestTypeMapper;
-import vkr.planner.utils.ExcelUtils;
-import vkr.planner.utils.JsonUtils;
 
 import java.io.IOException;
 
@@ -20,15 +18,9 @@ public class ProcessCheck {
     private static final Logger logger = LogManager.getLogger(ProcessCheck.class);
     @Autowired
     private final RequestTypeMapper requestTypeMapper;
-    @Autowired
-    private final JsonUtils jsonUtils;
-    @Autowired
-    private final ExcelUtils excelUtils;
 
-    public ProcessCheck(RequestTypeMapper requestTypeMapper, JsonUtils jsonUtils, ExcelUtils excelUtils) {
+    public ProcessCheck(RequestTypeMapper requestTypeMapper) {
         this.requestTypeMapper = requestTypeMapper;
-        this.jsonUtils = jsonUtils;
-        this.excelUtils = excelUtils;
     }
 
     public void process(CheckRequest checkRequest) throws UnknownTypeException, IOException, InvalidFormatException, ConvertToDtoException {
