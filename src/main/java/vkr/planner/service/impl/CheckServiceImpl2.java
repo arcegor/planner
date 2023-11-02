@@ -1,23 +1,26 @@
 package vkr.planner.service.impl;
 
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import vkr.planner.model.Plan;
 import vkr.planner.model.Rule;
 import vkr.planner.service.CheckService;
 
+@Component
 public class CheckServiceImpl2 implements CheckService {
-    public static final String REQUEST_TYPE = "plan2";
+    public static final String REQUEST_TYPE = "Второй";
+
+    public static final String CHECK_RESPONSE = "Проверка запроса пройдена!";
     @Override
     public boolean checkPlanByRule(Plan plan, Rule rule) {
         return false;
     }
     @Override
-    public boolean check() {
-        return true;
+    public String check() {
+        return CHECK_RESPONSE;
     }
     @Override
-    public CheckService getInstance(String requestType) {
-        if (requestType.equals(REQUEST_TYPE)) return new CheckServiceImpl2();
-        return null;
+    public String getRequestType() {
+        return REQUEST_TYPE;
     }
 }

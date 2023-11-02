@@ -1,6 +1,7 @@
 package vkr.planner.service.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import vkr.planner.model.DocumentDto;
 import vkr.planner.model.Plan;
@@ -11,9 +12,12 @@ import vkr.planner.service.CheckService;
 import java.util.Comparator;
 import java.util.List;
 
+@Component
 public class CheckServiceImpl implements CheckService {
 
-    public static final String REQUEST_TYPE = "plan";
+    public static final String REQUEST_TYPE = "Первый";
+
+    public static final String CHECK_RESPONSE = "Проверка запроса не пройдена!";
 
     @Override
     public boolean checkPlanByRule(Plan plan, @NotNull Rule rule) {
@@ -24,14 +28,12 @@ public class CheckServiceImpl implements CheckService {
         };
     }
     @Override
-    public boolean check() {
-        return false;
+    public String check() {
+        return CHECK_RESPONSE;
     }
-
     @Override
-    public CheckService getInstance(String requestType) {
-        if (requestType.equals(REQUEST_TYPE)) return new CheckServiceImpl();
-        return null;
+    public String getRequestType() {
+        return REQUEST_TYPE;
     }
 
     public boolean checkOrder(@NotNull Plan plan){
