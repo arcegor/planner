@@ -36,6 +36,7 @@ public class CheckServiceTreesImpl implements CheckService {
 
         forestAseBuild.setExcelTable(excelTable);
         forestAseBuild.getAreas();
+        checkRequest.setResultType(CheckRequest.ResultType.SUCCESS);
         return forestAseBuild.createResponse();
     }
     @Override

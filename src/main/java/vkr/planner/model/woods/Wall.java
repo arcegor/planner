@@ -9,8 +9,4 @@ public class Wall extends Area{
         super(description);
     }
 
-    @Override
-    public void parseArea() {
-
-    }
 }

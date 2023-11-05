@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class RequestTypeMapper {
-    public static final String MESSAGE = "Неизвестный тип объекта запроса!";
+    public static final String UNKNOWN_TYPE_MESSAGE = "Неизвестный тип объекта запроса!";
     @Autowired
     private final List<CheckService> requestTypes;
 
@@ -33,6 +33,6 @@ public class RequestTypeMapper {
     @NotNull
     public CheckService getCheckServiceByRequestType(String requestType) throws UnknownTypeException {
         return Optional.ofNullable(requestTypeMappingCheckService.get(requestType)).orElseThrow(() ->
-                new UnknownTypeException("Неизвестный тип объекта!"));
+                new UnknownTypeException(UNKNOWN_TYPE_MESSAGE));
     }
 }

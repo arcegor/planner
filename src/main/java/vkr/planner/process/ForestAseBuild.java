@@ -9,11 +9,10 @@ import vkr.planner.model.woods.Area;
 import vkr.planner.model.woods.Floor;
 import vkr.planner.model.woods.Wall;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Component
 @Getter
@@ -24,25 +23,37 @@ public class ForestAseBuild {
         ПЕРЕКРЫТИЕ,
         СТЕНА;
     }
-    private Map<CellPatternEnumType, Pattern> cellParseMapping;
+//    private Map<CellPatternEnumType, Pattern> cellPatternEnumTypePatternMap;
+    private Map<CellPatternEnumType, String> cellPatternEnumTypeStringMap;
     private List<Area> areaList;
     private Map<Integer, List<String>> excelTable;
+    public static final String NO_DESCRIPTION = "Не удалось извлечь описание области";
+    public static final String NO_MATCHES = "Совпадений не найдено";
     @PostConstruct
     public void init(){
-        cellParseMapping = ImmutableMap.<CellPatternEnumType, Pattern>builder()
-                .put(CellPatternEnumType.СТЕНА, Pattern.compile(" *" + "с отметки" + "-\\d+,\\d+" + "\\+\\d+,\\d+"))
-                .put(CellPatternEnumType.ПЕРЕКРЫТИЕ, Pattern.compile(" *" + "(на отметке|с отметки)" + "(-\\d+,\\d+" + "|" + "\\+\\d+,\\d+)"))
-                .put(CellPatternEnumType.ТАБЛИЦА, Pattern.compile("таблицу"))
-    .build();
+//        cellPatternEnumTypePatternMap = ImmutableMap.<CellPatternEnumType, Pattern>builder()
+//                .put(CellPatternEnumType.СТЕНА, Pattern.compile(
+//                        "с отметки"))
+//                .put(CellPatternEnumType.ПЕРЕКРЫТИЕ, Pattern.compile("на отметке"))
+//                .put(CellPatternEnumType.ТАБЛИЦА, Pattern.compile("таблицу"))
+//                .build();
+        cellPatternEnumTypeStringMap = ImmutableMap.<CellPatternEnumType, String>builder()
+                .put(CellPatternEnumType.СТЕНА, "с отметки")
+                .put(CellPatternEnumType.ПЕРЕКРЫТИЕ, "на отметке")
+                .put(CellPatternEnumType.ТАБЛИЦА, "таблицу")
+                .build();
     }
-    public boolean isMatched(String cell, Pattern pattern){
-        Matcher matcher = pattern.matcher(cell);
-        return matcher.matches();
+//    public boolean isMatchedToPattern(String cell, Pattern pattern){
+//        Matcher matcher = pattern.matcher(cell);
+//        return matcher.matches();
+//    }
+    public boolean isContainsSubstring(String cell, String pattern){
+        return cell.contains(pattern);
     }
     private Optional<CellPatternEnumType> parseCell(String cell){
-        return cellParseMapping.entrySet().stream()
+        return cellPatternEnumTypeStringMap.entrySet().stream()
                 .filter(e -> !cell.trim().isEmpty())
-                .filter(e -> isMatched(cell, e.getValue()))
+                .filter(e -> isContainsSubstring(cell, e.getValue()))
                 .map(Map.Entry::getKey)
                 .findFirst();
     }
@@ -54,20 +65,41 @@ public class ForestAseBuild {
                 .findFirst();
     }
     public void getAreas(){
+        areaList = new ArrayList<>();
         for (Integer key: excelTable.keySet()){
             Optional<CellPatternEnumType> cellPatternEnumType = parseRow(excelTable.get(key));
             if (cellPatternEnumType.isEmpty())
                 continue;
+            String description = getAreaDescriptionFromRow(excelTable.get(key)).orElse(NO_DESCRIPTION);
             switch (cellPatternEnumType.get()){
-                case ПЕРЕКРЫТИЕ -> areaList.add(new Floor("Перекрытие"));
-                case СТЕНА -> areaList.add(new Wall("Стена"));
+                case ПЕРЕКРЫТИЕ -> areaList.add(parsePipesInArea(key, new Floor(description)));
+                case СТЕНА -> areaList.add(parsePipesInArea(key, new Wall(description)));
                 default -> areaList.add(null);
             }
         }
     }
+    private Floor parsePipesInArea(Integer key, Floor floor){
+//        `for (Integer k : excelTable.keySet()){
+//            if (k.equals(key)){
+//            }
+//        }`
+        return floor;
+    }
+    private Wall parsePipesInArea(Integer key, Wall wall){
+        return wall;
+    }
+    private Optional<String> getAreaDescriptionFromRow(List<String> row){
+        return row.stream()
+                .filter(e -> !e.trim().isEmpty())
+                .findFirst();
+    }
     public String createResponse(){
         int countFloor = 0, countWall = 0, count = 0;
+        if (areaList.isEmpty())
+            return NO_MATCHES;
         for (Area area: areaList){
+            if (area == null)
+                continue;
             if (area.getClass().equals(Floor.class)) {
                 countFloor += 1;
             }
@@ -76,8 +108,8 @@ public class ForestAseBuild {
             }
             count += 1;
         }
-        return "Число перекрытий равно" + countFloor + ",\n" +
-                "Число стен равно" + countWall + ",\n" +
-                "Общее число межблочных пространств равно" + count;
+        return "Число перекрытий равно " + countFloor + ", " +
+                "Число стен равно " + countWall + ", " +
+                "Общее число межблочных пространств равно " + count;
     }
 }

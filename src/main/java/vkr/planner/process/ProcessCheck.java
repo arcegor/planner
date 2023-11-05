@@ -2,16 +2,12 @@ package vkr.planner.process;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import vkr.planner.exception.ConvertToDtoException;
 import vkr.planner.exception.UnknownTypeException;
 import vkr.planner.model.CheckRequest;
 import vkr.planner.service.CheckService;
 import vkr.planner.service.mapper.RequestTypeMapper;
-
-import java.io.IOException;
 
 @Component
 public class ProcessCheck {
@@ -23,10 +19,16 @@ public class ProcessCheck {
         this.requestTypeMapper = requestTypeMapper;
     }
 
-    public void process(CheckRequest checkRequest) throws UnknownTypeException, IOException, InvalidFormatException, ConvertToDtoException {
+    public void process(CheckRequest checkRequest) throws UnknownTypeException {
         CheckService checkService = requestTypeMapper.getCheckServiceByRequestType(checkRequest.getRequestType());
-        String result = checkService.check(checkRequest);
-        logger.info(">>> Результат проверки для запроса типа {} : " +
-                "{}", checkRequest.getRequestType(), result);
+        String result;
+        try {
+            result = checkService.check(checkRequest);
+        }
+        catch (Exception exception){
+            throw new RuntimeException(exception.getMessage());
+        }
+        logger.info(">>> Результат проверки для запроса типа {} : \n" +
+                ">>> {}", checkRequest.getRequestType(), result);
     }
 }
