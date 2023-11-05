@@ -7,13 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import vkr.planner.exception.ConvertToDtoException;
 import vkr.planner.exception.UnknownTypeException;
 import vkr.planner.model.CheckRequest;
 import vkr.planner.process.ProcessCheck;
-import vkr.planner.service.CheckService;
-import vkr.planner.service.mapper.RequestTypeMapper;
 
 import java.io.IOException;
 
