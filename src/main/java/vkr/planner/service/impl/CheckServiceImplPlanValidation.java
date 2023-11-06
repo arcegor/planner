@@ -3,24 +3,24 @@ package vkr.planner.service.impl;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import vkr.planner.model.CheckRequest;
-import vkr.planner.model.type2.Plan;
-import vkr.planner.model.Rule;
-import vkr.planner.model.type2.Task;
+import vkr.planner.model.schedule.Plan;
+import vkr.planner.model.schedule.PlanValidationRule;
+import vkr.planner.model.schedule.Task;
 import vkr.planner.service.CheckService;
 
 import java.util.Comparator;
 import java.util.List;
 
 @Component
-public class CheckServiceImpl1 implements CheckService {
+public class CheckServiceImplPlanValidation implements CheckService {
 
-    public static final String REQUEST_TYPE = "Первый";
+    public static final String REQUEST_TYPE = "План-график";
 
-    public static final String CHECK_RESPONSE = "Проверка запроса не пройдена!";
+    public static final String CHECK_RESPONSE = "План не валиден !";
 
     @Override
-    public boolean checkPlanByRule(Plan plan, @NotNull Rule rule) {
-        return switch (rule.getRuleType()) {
+    public boolean isPlanValidByRule(Plan plan, @NotNull PlanValidationRule planValidationRule) {
+        return switch (planValidationRule.getPlanValidationRuleType()) {
             case ORDER -> checkOrder(plan);
             case DURATION -> checkDuration(plan);
             case COSTS -> checkCosts(plan);

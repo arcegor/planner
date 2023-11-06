@@ -1,9 +1,9 @@
 package vkr.planner.service.impl;
 
 import org.junit.jupiter.api.Test;
-import vkr.planner.model.type2.Plan;
-import vkr.planner.model.Rule;
-import vkr.planner.model.type2.Task;
+import vkr.planner.model.schedule.Plan;
+import vkr.planner.model.schedule.PlanValidationRule;
+import vkr.planner.model.schedule.Task;
 import vkr.planner.service.CheckService;
 
 import java.time.Duration;
@@ -11,8 +11,8 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CheckServiceImpl1Test {
-    private final CheckService checkService = new CheckServiceImpl1();
+class CheckServiceImplPlanValidationTest {
+    private final CheckService checkService = new CheckServiceImplPlanValidation();
 
     @Test
     void checkPlanByRule() {
@@ -38,20 +38,20 @@ class CheckServiceImpl1Test {
         plan3.setMaxCosts(15);
         plan3.setMaxDuration(Duration.ofDays(11)); // Превышение длительности
 
-        Rule order = new Rule("Порядок", Rule.RuleType.ORDER);
-        Rule duration = new Rule("Время", Rule.RuleType.DURATION);
-        Rule costs = new Rule("Стоимость", Rule.RuleType.COSTS);
+        PlanValidationRule order = new PlanValidationRule(PlanValidationRule.PlanValidationRuleType.ORDER);
+        PlanValidationRule duration = new PlanValidationRule(PlanValidationRule.PlanValidationRuleType.DURATION);
+        PlanValidationRule costs = new PlanValidationRule(PlanValidationRule.PlanValidationRuleType.COSTS);
 
-        assertTrue(checkService.checkPlanByRule(plan1, order));
-        assertTrue(checkService.checkPlanByRule(plan1, duration));
-        assertTrue(checkService.checkPlanByRule(plan1, costs));
+        assertTrue(checkService.isPlanValidByRule(plan1, order));
+        assertTrue(checkService.isPlanValidByRule(plan1, duration));
+        assertTrue(checkService.isPlanValidByRule(plan1, costs));
 
-        assertFalse(checkService.checkPlanByRule(plan2, order));
-        assertTrue(checkService.checkPlanByRule(plan2, duration));
-        assertFalse(checkService.checkPlanByRule(plan2, costs));
+        assertFalse(checkService.isPlanValidByRule(plan2, order));
+        assertTrue(checkService.isPlanValidByRule(plan2, duration));
+        assertFalse(checkService.isPlanValidByRule(plan2, costs));
 
-        assertTrue(checkService.checkPlanByRule(plan3, order));
-        assertFalse(checkService.checkPlanByRule(plan3, duration));
-        assertTrue(checkService.checkPlanByRule(plan3, costs));
+        assertTrue(checkService.isPlanValidByRule(plan3, order));
+        assertFalse(checkService.isPlanValidByRule(plan3, duration));
+        assertTrue(checkService.isPlanValidByRule(plan3, costs));
     }
 }

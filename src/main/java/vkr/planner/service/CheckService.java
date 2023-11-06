@@ -5,8 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import vkr.planner.exception.ConvertToDtoException;
 import vkr.planner.model.CheckRequest;
-import vkr.planner.model.type2.Plan;
-import vkr.planner.model.Rule;
+import vkr.planner.model.schedule.Plan;
+import vkr.planner.model.schedule.PlanValidationRule;
 
 import java.io.IOException;
 import java.util.List;
@@ -14,12 +14,11 @@ import java.util.Map;
 
 @Service
 public interface CheckService<T> {
-    boolean checkPlanByRule(Plan plan, @NotNull Rule rule);
+    boolean isPlanValidByRule(Plan plan, @NotNull PlanValidationRule planValidationRule);
 
     String check(CheckRequest checkRequest) throws IOException, InvalidFormatException, ConvertToDtoException;
     String getRequestType();
-    default T convertToModel(Map<Integer, List<String>> data, T obj){
+    default T convertToModel(CheckRequest checkRequest, T obj) throws IOException, InvalidFormatException {
         return obj;
     }
-
 }
