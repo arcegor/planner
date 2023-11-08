@@ -28,6 +28,8 @@ public class ProcessCheck {
         catch (Exception exception){
             throw new RuntimeException(exception.getMessage());
         }
+        checkRequest.setResult(result);
+        checkRequest.setResultType(CheckRequest.ResultType.SUCCESS);
         logger.info(">>> Результат проверки для запроса типа {} : \n" +
                 ">>> {}", checkRequest.getRequestType(), result);
     }

@@ -1,4 +1,4 @@
-package vkr.planner.model.specification.woods;
+package vkr.planner.model.woods;
 
 import lombok.Data;
 
@@ -10,10 +10,12 @@ abstract public class Area {
 
     private final AreaType description;
 
-    private final List<Pipe> pipeList = new ArrayList<>();
+    protected final List<Pipe> pipeList = new ArrayList<>();
 
     private final List<String> neighboringSpaces = new ArrayList<>();
     public Area(AreaType description) {
         this.description = description;
     }
+
+    abstract public double getLevel();
 }

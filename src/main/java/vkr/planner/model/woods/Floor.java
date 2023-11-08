@@ -1,7 +1,9 @@
-package vkr.planner.model.specification.woods;
+package vkr.planner.model.woods;
 
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Setter
 @Getter

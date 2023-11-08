@@ -28,7 +28,7 @@ public class CheckDocumentController {
     @RequestMapping(value = "/upload", method = RequestMethod.POST,
             consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<String> uploadFile(
-            @ModelAttribute CheckRequest checkRequest) throws UnknownTypeException, IOException, InvalidFormatException, ConvertToDtoException {
+            @ModelAttribute CheckRequest checkRequest) throws UnknownTypeException {
 
         logger.info(">>> Получен запрос с параметрами {}", checkRequest.toString());
         if (checkRequest.getRequestFile() == null || checkRequest.getRequestType() == null){

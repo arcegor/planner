@@ -10,14 +10,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 @Data
+@ToString(exclude = "requestFile")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CheckRequest implements Serializable {
 
     @JsonProperty(value = "requestType")
     private String requestType;
 
-    @JsonProperty(value = "requestData")
-    private String requestData;
+    @JsonProperty(value = "requestRules")
+    private String requestRules;
 
     @JsonProperty(value = "requestFile")
     private MultipartFile requestFile;
@@ -25,9 +26,12 @@ public class CheckRequest implements Serializable {
     @JsonProperty(value = "resultType")
     private ResultType resultType;
 
-    public CheckRequest(String requestType, String requestData) {
+    @JsonProperty(value = "result")
+    private String result;
+
+    public CheckRequest(String requestType, String requestRules) {
         this.requestType = requestType;
-        this.requestData = requestData;
+        this.requestRules = requestRules;
     }
 
     public enum ResultType{

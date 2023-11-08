@@ -9,6 +9,7 @@ import vkr.planner.model.schedule.Plan;
 import vkr.planner.model.schedule.PlanValidationRule;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +19,7 @@ public interface CheckService<T> {
 
     String check(CheckRequest checkRequest) throws IOException, InvalidFormatException, ConvertToDtoException;
     String getRequestType();
-    default T convertToModel(CheckRequest checkRequest, T obj) throws IOException, InvalidFormatException {
+    default T convertToModel(InputStream inputStream, T obj) throws IOException, InvalidFormatException {
         return obj;
     }
 }
