@@ -19,10 +19,14 @@ public class RulesCheckServiceImplLevel implements RulesCheckService<TechnicalDe
                 .flatMap(area -> area.getPipeList().stream())
                 .filter(pipe -> Math.abs(pipe.getZ() - pipe.getLevel()) > level)
                 .forEach(pipe ->
-                        stringBuilder.append(pipe).append(", ").append(Math.round(Math.abs((pipe.getZ() - pipe.getLevel()) - level)))
+                        stringBuilder.append(pipe).append(", ").append(round(Math.abs((pipe.getZ() - pipe.getLevel()) - level), 2))
                                 .append(",\n")
                 );
         return stringBuilder.toString();
+    }
+    public static double round(double value, int places) {
+        double scale = Math.pow(10, places);
+        return Math.round(value * scale) / scale;
     }
     @Override
     public String getRuleType() {

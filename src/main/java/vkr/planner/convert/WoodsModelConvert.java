@@ -25,13 +25,14 @@ public class WoodsModelConvert {
     public static final String NO_DESCRIPTION = "Не удалось извлечь описание области";
     public static final String NO_MATCHES = "Совпадений не найдено";
     public static final String KKS_NOT_FOUND = "KKS код не найден";
+    public static final String RESERVE_KKS = "Резерв";
     public static final String NEIGHBOUR_AREAS_NOT_FOUND = "Смежные помещения не найдены";
 
     public static Integer KKS_INDEX = 1;
     public static Integer COORDINATES_INDEX = 2;
-    public static Integer THERMALLY_INSULATED_INDEX = 11;
+    public static Integer THERMALLY_INSULATED_INDEX = 10;
     public static Integer PIPE_NUMBER = 0;
-    public static Integer NEIGHBOUR_AREAS = 14;
+    public static Integer NEIGHBOUR_AREAS = 13;
     @PostConstruct
     public void init(){
         this.cellPatternEnumTypeStringMap = ImmutableMap.<CellPatternEnumType, String>builder()
@@ -44,7 +45,7 @@ public class WoodsModelConvert {
     private Pattern patternKks = Pattern.compile("[A-Z]+(\\d)*");
     private Pattern patternPipeNumber = Pattern.compile("[0-9]+[,.][0-9]*");
     private Pattern thermallyNotInsulatedPattern = Pattern.compile("[0\\- ]");
-    private Pattern neighbouringAreasPattern = Pattern.compile("\\w\\s*/\\s*\\w");
+    private Pattern neighbouringAreasPattern = Pattern.compile("\\w+\\s*/\\s*\\w+");
     public boolean isContainsSubstring(String cell, String pattern){
         return cell.contains(pattern);
     }
@@ -110,11 +111,11 @@ public class WoodsModelConvert {
                 Optional<List<String>> neighbouringAreas = extractNeighbouringAreas(excelTable.get(key + 1).get(NEIGHBOUR_AREAS));
                 if (num.isPresent()){
                     area.getPipeList().add(new Pipe(
-                            key + 1,
+                            (int) Double.parseDouble(num.orElse(String.valueOf(key + 1))),
                             Double.parseDouble(excelTable.get(key + 1).get(COORDINATES_INDEX)) / 1000, // x
                             Double.parseDouble(excelTable.get(key + 2).get(COORDINATES_INDEX)) / 1000, // y
                             Double.parseDouble(excelTable.get(key + 3).get(COORDINATES_INDEX)) / 1000, // z
-                            isNeedToBeThermallyTnsulated(excelTable.get(key).get(THERMALLY_INSULATED_INDEX)), // термоизоляция
+                            isNeedToBeThermallyTnsulated(excelTable.get(key + 1).get(THERMALLY_INSULATED_INDEX)), // термоизоляция
                             kks.orElse(KKS_NOT_FOUND), // kks
                             neighbouringAreas.orElse(Collections.singletonList(NEIGHBOUR_AREAS_NOT_FOUND)), // смежные помещения
                             area.getLevel() // уровень пола помещения
@@ -129,8 +130,10 @@ public class WoodsModelConvert {
         return area;
     }
     private Optional<String> extractKks(String kks){
-         Matcher matcher = patternKks.matcher(kks);
-         return matcher.find() ? matcher.group().describeConstable() : Optional.empty();
+        if (kks.trim().equalsIgnoreCase(RESERVE_KKS))
+            return RESERVE_KKS.describeConstable();
+        Matcher matcher = patternKks.matcher(kks);
+        return matcher.find() ? matcher.group().describeConstable() : Optional.empty();
     }
     private Optional<String> extractPipeNumber(String s){
         Matcher matcher = patternPipeNumber.matcher(s);
@@ -139,7 +142,8 @@ public class WoodsModelConvert {
     private Optional<List<String>> extractNeighbouringAreas(String s){
         Matcher matcher = neighbouringAreasPattern.matcher(s);
         if (matcher.find())
-            return Optional.of(Arrays.stream(matcher.group().split("/")).toList());
+            return Optional.of(Arrays.stream(matcher.group().split("/"))
+                    .map(String::trim).toList());
         return Optional.empty();
     }
     private List<Double> getMatchers(String s){
@@ -156,6 +160,7 @@ public class WoodsModelConvert {
                 .findFirst();
     }
     private boolean isNeedToBeThermallyTnsulated(String s){
-        return !thermallyNotInsulatedPattern.matcher(s).matches();
+        s = s.trim().replaceAll(".0", "").replaceAll("0", "");
+        return !(thermallyNotInsulatedPattern.matcher(s).find() || s.isEmpty());
     }
 }
