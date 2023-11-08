@@ -16,4 +16,5 @@ public class Pipe {
     private String kks;
     private List<String> neighbouringAreas;
     private double level;
+    private AreaType areaType;
 }

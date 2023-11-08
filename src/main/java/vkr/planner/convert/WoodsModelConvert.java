@@ -118,7 +118,8 @@ public class WoodsModelConvert {
                             isNeedToBeThermallyTnsulated(excelTable.get(key + 1).get(THERMALLY_INSULATED_INDEX)), // термоизоляция
                             kks.orElse(KKS_NOT_FOUND), // kks
                             neighbouringAreas.orElse(Collections.singletonList(NEIGHBOUR_AREAS_NOT_FOUND)), // смежные помещения
-                            area.getLevel() // уровень пола помещения
+                            area.getLevel(), // уровень пола помещения
+                            area.getDescription()
                     ));
                     key += 3;
                 }

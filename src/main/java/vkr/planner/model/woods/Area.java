@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 abstract public class Area {
 
-    private final AreaType description;
+    protected AreaType description;
 
     protected final List<Pipe> pipeList = new ArrayList<>();
 
