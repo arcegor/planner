@@ -13,7 +13,9 @@ public class PlanValidationRule {
     public enum PlanValidationRuleType {
         ORDER,
         COSTS,
-        DURATION
+        DURATION,
+        ALL_TASKS,
+        NOT_DONE_TASKS,
     }
 }
 

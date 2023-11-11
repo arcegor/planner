@@ -1,35 +1,39 @@
 package vkr.planner.service.impl.rules;
 
 import org.springframework.stereotype.Component;
-import vkr.planner.model.woods.Pipe;
-import vkr.planner.model.woods.TechnicalDescriptionWoods;
-import vkr.planner.model.woods.WoodsRuleSet;
+import vkr.planner.model.woods.*;
 import vkr.planner.service.RulesCheckService;
 
-import java.util.List;
+import java.util.*;
 
 @Component
-public class RulesCheckServiceImplLevel implements RulesCheckService<TechnicalDescriptionWoods> {
-    public static final String RULE_TYPE = "Высота лесов";
-    public String checkByRule(WoodsRuleSet woodsRuleSet, TechnicalDescriptionWoods technicalDescriptionWoods) {
+public class RulesCheckServiceImplLevel implements RulesCheckService<RulesModel, TechnicalDescriptionWoods> {
+    public static final RuleType RULE_TYPE = RuleType.LEVEL;
+    @Override
+    public TechnicalDescriptionWoods checkByRule(RulesModel rulesModel, TechnicalDescriptionWoods technicalDescriptionWoods) {
+        Map<Pipe, Double> woodsLevels =new HashMap<>();
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Леса, превыщающие высоту ").append(woodsRuleSet.getWoodsTopBound()).append(" :\n");
-        double level = woodsRuleSet.getWoodsTopBound();
+        stringBuilder.append("Проходки, превыщающие высоту ").append(rulesModel.getMinHeightOfWoodsToCreate()).append(" :\n");
+        double level = rulesModel.getMinHeightOfWoodsToCreate();
         technicalDescriptionWoods.getAreaList().stream()
                 .flatMap(area -> area.getPipeList().stream())
                 .filter(pipe -> Math.abs(pipe.getZ() - pipe.getLevel()) > level)
                 .forEach(pipe ->
-                        stringBuilder.append(pipe).append(", ").append(round(Math.abs((pipe.getZ() - pipe.getLevel()) - level), 2))
-                                .append(",\n")
+                        woodsLevels.put(pipe, round(Math.abs((pipe.getZ() - pipe.getLevel())), 3))
                 );
-        return stringBuilder.toString();
+        technicalDescriptionWoods.getRuleTypeResult().put(RuleType.LEVEL, getResult(woodsLevels, stringBuilder));
+        return technicalDescriptionWoods;
     }
     public static double round(double value, int places) {
         double scale = Math.pow(10, places);
         return Math.round(value * scale) / scale;
     }
     @Override
-    public String getRuleType() {
+    public RuleType getRuleType() {
         return RULE_TYPE;
+    }
+
+    public String getResult(Map<Pipe, Double> woodsLevels, StringBuilder stringBuilder){
+        return stringBuilder.append(String.join(", ", woodsLevels.keySet().toString())).toString();
     }
 }

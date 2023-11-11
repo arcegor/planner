@@ -1,40 +1,38 @@
 package vkr.planner.service.impl.rules;
 
 import org.springframework.stereotype.Component;
-import vkr.planner.model.woods.Area;
-import vkr.planner.model.woods.Pipe;
-import vkr.planner.model.woods.TechnicalDescriptionWoods;
-import vkr.planner.model.woods.WoodsRuleSet;
+import vkr.planner.model.woods.*;
 import vkr.planner.service.RulesCheckService;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
-public class RulesCheckServiceImplArea implements RulesCheckService<TechnicalDescriptionWoods> {
-    public static final String RULE_TYPE = "Смежные помещения";
+public class RulesCheckServiceImplArea implements RulesCheckService<RulesModel, TechnicalDescriptionWoods> {
+    public static final RuleType RULE_TYPE = RuleType.AREA;
     @Override
-    public String checkByRule(WoodsRuleSet woodsRuleSet, TechnicalDescriptionWoods technicalDescriptionWoods) {
+    public TechnicalDescriptionWoods checkByRule(RulesModel rulesModel, TechnicalDescriptionWoods technicalDescriptionWoods) {
         StringBuilder stringBuilder = new StringBuilder();
         for (Area area: technicalDescriptionWoods.getAreaList()){
             for (Pipe pipe : area.getPipeList()){
                 Set<String> result = pipe.getNeighbouringAreas().stream()
                         .distinct()
-                        .filter(woodsRuleSet.getNeighboringAreasToCheck()::contains)
+                        .filter(rulesModel.getNeighboringAreasToCheck()::contains)
                         .collect(Collectors.toSet());
                 if (result.isEmpty())
                     continue;
                 stringBuilder.append(
                         String.format("Проходка %s совпадает по смежным помещениям : %s \n",
-                                pipe, String.join(", ", woodsRuleSet.getNeighboringAreasToCheck()))
+                                pipe, String.join(", ", rulesModel.getNeighboringAreasToCheck()))
                 );
             }
         }
-        return stringBuilder.toString();
+        technicalDescriptionWoods.getRuleTypeResult().put(RuleType.AREA, stringBuilder.toString());
+        return technicalDescriptionWoods;
     }
 
     @Override
-    public String getRuleType() {
+    public RuleType getRuleType() {
         return RULE_TYPE;
     }
 }

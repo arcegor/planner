@@ -11,22 +11,21 @@ import java.time.Duration;
 @AllArgsConstructor
 public class Task {
     private String name;
+    private TaskType taskType;
     private int order; // в контексте плана
     private Duration duration; // номинальная длительность в днях
     private boolean isBlocker; // является ли блокером в плане (означает, что пока не будет выполнено,
                                // следующие по порядку задачи начинать нельзя)
     private int costs; // издержки/затраты
+    private boolean isDone; // выполнено или нет
     public Task(String name){
         this.name = name;
     }
-    @Override
-    public String toString() {
-        return "Task{" +
-                "name='" + name + '\'' +
-                ", order=" + order +
-                ", duration=" + duration +
-                ", isBlocker=" + isBlocker +
-                ", costs=" + costs +
-                '}';
+    public Task(String string, int i, Duration duration, boolean b, int i1) {
+    }
+
+    enum TaskType{
+        THERMAL_INSULATION,
+        ENCAPSULATION
     }
 }

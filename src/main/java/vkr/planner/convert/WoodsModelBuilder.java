@@ -14,11 +14,11 @@ import java.util.regex.Pattern;
 @Component
 @Getter
 @Setter
-public class WoodsModelConvert {
+public class WoodsModelBuilder {
     enum CellPatternEnumType{
         ТАБЛИЦА,
         ПЕРЕКРЫТИЕ,
-        СТЕНА;
+        СТЕНА
     }
     private Map<CellPatternEnumType, String> cellPatternEnumTypeStringMap;
     private Map<Integer, List<String>> excelTable;
@@ -33,6 +33,7 @@ public class WoodsModelConvert {
     public static Integer THERMALLY_INSULATED_INDEX = 10;
     public static Integer PIPE_NUMBER = 0;
     public static Integer NEIGHBOUR_AREAS = 13;
+
     @PostConstruct
     public void init(){
         this.cellPatternEnumTypeStringMap = ImmutableMap.<CellPatternEnumType, String>builder()

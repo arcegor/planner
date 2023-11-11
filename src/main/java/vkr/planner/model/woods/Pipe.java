@@ -3,8 +3,10 @@ package vkr.planner.model.woods;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -17,4 +19,18 @@ public class Pipe {
     private List<String> neighbouringAreas;
     private double level;
     private AreaType areaType;
+    @Override
+    public String toString(){
+        return "Проходка(Порядковый номер: " + id + ", координаты: " +
+                x + ", " + y + ", " + z + ", должна быть теплоизолирована: " + iso() +
+                ",\nкод ККС: " + kks + ", тип помещения: " + areaType + ", уровень пола в помещении: " + level +
+                ", смежные помещения: " + neighbouringAreasToString() + ")";
+    }
+
+    public String iso(){
+        return isNeedToBeThermallyTnsulated ? "да" : "нет";
+    }
+    public String neighbouringAreasToString(){
+        return String.join(", ", neighbouringAreas);
+    }
 }

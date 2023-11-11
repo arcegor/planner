@@ -4,15 +4,16 @@ import org.junit.jupiter.api.Test;
 import vkr.planner.model.schedule.Plan;
 import vkr.planner.model.schedule.PlanValidationRule;
 import vkr.planner.model.schedule.Task;
-import vkr.planner.service.CheckService;
+import vkr.planner.service.impl.rules.RulesCheckServiceImplPlanValidation;
 
 import java.time.Duration;
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CheckServiceImplPlanValidationTest {
-    private final CheckService checkService = new CheckServiceImplPlanValidation();
+    private final RulesCheckServiceImplPlanValidation checkService = new RulesCheckServiceImplPlanValidation();
 
     @Test
     void checkPlanByRule() {
