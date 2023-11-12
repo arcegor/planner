@@ -26,7 +26,7 @@ public class RulesModelBuilder {
         if (plan.getTaskByType(Task.TaskType.CREATION_WOODS).isPresent()){
             boolean isNeedToBeDone = !plan.getTaskByType(Task.TaskType.CREATION_WOODS).get().isDone();
             if (isNeedToBeDone){
-                if (rulesModel.getMinHeightOfWoodsToCreate().isNaN())
+                if (rulesModel.getMinHeightOfWoodsToCreate() == null)
                     rulesModel.setMinHeightOfWoodsToCreate(1.5);
                 else rulesModel.setMinHeightOfWoodsToCreate(woodsRuleSet.getMinHeightOfWoodsToCreate());
             }
