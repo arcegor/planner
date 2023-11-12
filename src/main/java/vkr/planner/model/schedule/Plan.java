@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Optional;
 
 
 @Data
@@ -20,5 +21,11 @@ public class Plan {
 
     public Plan(String name){
         this.name = name;
+    }
+
+    public Optional<Task> getTaskByType(Task.TaskType taskType){
+        return this.getTaskList().stream()
+                .filter(task -> task.getTaskType().equals(taskType))
+                .findFirst();
     }
 }

@@ -18,4 +18,8 @@ public class RulesModel {
     private Boolean isValidateKksToInsulate;
     private Double minHeightOfWoodsToCreate;
     private Boolean isEmpty;
+
+    public boolean getIsEmpty(){
+        return this.isEmpty;
+    }
 }

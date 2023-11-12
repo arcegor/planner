@@ -24,7 +24,11 @@ public class Task {
     public Task(String string, int i, Duration duration, boolean b, int i1) {
     }
 
-    enum TaskType{
+    public void setBlocker(String blocker){
+        this.isBlocker = blocker.contains("да");
+    }
+
+    public enum TaskType{
         THERMAL_INSULATION,
         ENCAPSULATION
     }

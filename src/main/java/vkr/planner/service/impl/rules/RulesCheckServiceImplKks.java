@@ -19,11 +19,9 @@ public class RulesCheckServiceImplKks implements RulesCheckService<RulesModel, T
                         ||  !rulesModel.getKksToInsulate().contains(pipe.getKks()) && pipe.isNeedToBeThermallyTnsulated()
                         )
                 .toList();
-
-        technicalDescriptionWoods.getAllPipeList()
-                                .forEach(pipe -> technicalDescriptionWoods.updatePipe(pipe, fixPipeThermalIsolation(pipe)));
-
         technicalDescriptionWoods.getRuleTypeResult().put(RuleType.KKS, getResult(collisionPipeList));
+        collisionPipeList.forEach(pipe -> technicalDescriptionWoods.updatePipe(pipe, fixPipeThermalIsolation(pipe)));
+
         return technicalDescriptionWoods;
     }
     @Override
@@ -36,6 +34,7 @@ public class RulesCheckServiceImplKks implements RulesCheckService<RulesModel, T
         for (Pipe pipe: collisionPipeList){
             stringBuilder.append(pipe).append(",\n");
         }
+        stringBuilder.append("Всего коллизий: ").append(collisionPipeList.size());
         return stringBuilder.toString();
     }
     public Pipe fixPipeThermalIsolation(Pipe pipe){

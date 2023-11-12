@@ -34,6 +34,9 @@ public class RulesCheckServiceImplLevel implements RulesCheckService<RulesModel,
     }
 
     public String getResult(Map<Pipe, Double> woodsLevels, StringBuilder stringBuilder){
-        return stringBuilder.append(String.join(", ", woodsLevels.keySet().toString())).toString();
+        for (Pipe pipe: woodsLevels.keySet()){
+            stringBuilder.append(pipe).append(",\n");
+        }
+        return stringBuilder.toString();
     }
 }
