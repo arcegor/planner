@@ -16,21 +16,23 @@ public class RulesModelBuilder {
         RulesModel rulesModel = new RulesModel();
         rulesModel.setRuleTypes(new ArrayList<>()); // Порядок обязателен !!!
 
-        if (woodsRuleSet.getIsValidateKksToInsulate()) {
-            Optional<Task> task = plan.getTaskByType(Task.TaskType.THERMAL_INSULATION);
-            if (task.isPresent() && !task.get().isBlocker()){
+        if (plan.getTaskByType(Task.TaskType.VALIDATE_KKS).isPresent()) {
+            boolean isNeedToBeDone = !plan.getTaskByType(Task.TaskType.VALIDATE_KKS).get().isDone();
+            if (!woodsRuleSet.getKksToInsulate().isEmpty() && isNeedToBeDone){
                 rulesModel.setKksToInsulate(woodsRuleSet.getKksToInsulate());
                 rulesModel.getRuleTypes().add(RuleType.KKS);
             }
         }
-        if (woodsRuleSet.getNeighboringAreasToCheck() != null){
-            rulesModel.setNeighboringAreasToCheck(woodsRuleSet.getNeighboringAreasToCheck());
-            rulesModel.getRuleTypes().add(RuleType.AREA);
-        }
-        if (woodsRuleSet.getMinHeightOfWoodsToCreate() != null){
-            rulesModel.setMinHeightOfWoodsToCreate(woodsRuleSet.getMinHeightOfWoodsToCreate());
+        if (plan.getTaskByType(Task.TaskType.CREATION_WOODS).isPresent()){
+            boolean isNeedToBeDone = !plan.getTaskByType(Task.TaskType.CREATION_WOODS).get().isDone();
+            if (isNeedToBeDone){
+                if (rulesModel.getMinHeightOfWoodsToCreate().isNaN())
+                    rulesModel.setMinHeightOfWoodsToCreate(1.5);
+                else rulesModel.setMinHeightOfWoodsToCreate(woodsRuleSet.getMinHeightOfWoodsToCreate());
+            }
             rulesModel.getRuleTypes().add(RuleType.LEVEL);
         }
+
         if (rulesModel.getRuleTypes().isEmpty())
             rulesModel.setIsEmpty(Boolean.TRUE);
         else rulesModel.setIsEmpty(Boolean.FALSE);

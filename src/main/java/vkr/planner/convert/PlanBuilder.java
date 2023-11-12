@@ -32,8 +32,10 @@ public class PlanBuilder {
     @PostConstruct
     public void init(){
         this.cellPatternEnumTypeStringMap = ImmutableMap.<Task.TaskType, String>builder()
-                .put(Task.TaskType.THERMAL_INSULATION, "Теплоизоляция")
+                .put(Task.TaskType.VALIDATE_KKS, "Проверка кодов ККС")
                 .put(Task.TaskType.ENCAPSULATION, "Герметизация")
+                .put(Task.TaskType.CREATION_WOODS, "Установка лесов")
+                .put(Task.TaskType.THERMAL_INSULATION, "Теплоизоляция")
                 .build();
     }
     private Optional<Task.TaskType> parseCell(String cell){
@@ -65,7 +67,7 @@ public class PlanBuilder {
                     continue;
                 Task task = new Task();
                 task.setTaskType(cellPatternEnumType.get());
-                task.setBlocker(excelTable.get(key).get(IS_BLOCKER_INDEX));
+                task.setDone(excelTable.get(key).get(IS_DONE_INDEX));
                 taskList.add(task);
             }
             plan.setTaskList(taskList);
