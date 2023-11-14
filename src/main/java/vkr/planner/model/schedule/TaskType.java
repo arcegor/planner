@@ -5,4 +5,10 @@ public enum TaskType{
     ENCAPSULATION,
     CREATION_WOODS,
     THERMAL_INSULATION,
+    ПОДГОТОВИТЬ_КРУЖКИ,
+    ВСКИПЯТИТЬ_ВОДУ,
+    НАЛИТЬ_ЗАВАРКУ,
+    ПОЛОЖИТЬ_МЯТУ,
+    НАЛИТЬ_КИПЯТОК
+
 }

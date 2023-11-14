@@ -4,6 +4,7 @@ package vkr.planner.model.woods;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import vkr.planner.model.RuleType;
 
 import java.util.*;
 

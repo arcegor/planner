@@ -2,14 +2,11 @@ package vkr.planner.service.impl.rules;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
-import vkr.planner.model.CheckRequest;
 import vkr.planner.model.schedule.Plan;
 import vkr.planner.model.schedule.PlanValidationRule;
 import vkr.planner.model.schedule.Task;
-import vkr.planner.model.woods.RuleType;
+import vkr.planner.model.RuleType;
 import vkr.planner.model.woods.RulesModel;
-import vkr.planner.model.woods.WoodsRuleSet;
-import vkr.planner.service.CheckService;
 import vkr.planner.service.RulesCheckService;
 
 import java.util.Comparator;

@@ -1,11 +1,10 @@
 package vkr.planner.model.woods;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import vkr.planner.model.RuleType;
 import vkr.planner.model.schedule.PlanValidationRule;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data

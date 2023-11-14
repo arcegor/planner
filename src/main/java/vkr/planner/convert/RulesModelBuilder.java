@@ -2,14 +2,14 @@ package vkr.planner.convert;
 
 import org.springframework.stereotype.Component;
 import vkr.planner.model.schedule.Plan;
-import vkr.planner.model.schedule.Task;
 import vkr.planner.model.schedule.TaskType;
-import vkr.planner.model.woods.RuleType;
+import vkr.planner.model.RuleType;
+import vkr.planner.model.tea.RulesModelTea;
+import vkr.planner.model.tea.TeaRuleSet;
 import vkr.planner.model.woods.RulesModel;
 import vkr.planner.model.woods.WoodsRuleSet;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 @Component
 public class RulesModelBuilder {
@@ -33,10 +33,34 @@ public class RulesModelBuilder {
             }
             rulesModel.getRuleTypes().add(RuleType.LEVEL);
         }
-
         if (rulesModel.getRuleTypes().isEmpty())
             rulesModel.setIsEmpty(Boolean.TRUE);
         else rulesModel.setIsEmpty(Boolean.FALSE);
+
+
+
+        return rulesModel;
+    }
+    public RulesModelTea build(TeaRuleSet teaRuleSet, Plan plan){ // построение сценария проверки задач на основании плана-графика и набора правил
+        RulesModelTea rulesModel = new RulesModelTea();
+        rulesModel.setRuleTypes(new ArrayList<>()); // Порядок обязателен !!!
+
+
+        if (plan.getTaskByType(TaskType.ВСКИПЯТИТЬ_ВОДУ).isPresent()){
+            int temp = teaRuleSet.getTemp();
+            rulesModel.setTemp(temp);
+            rulesModel.getRuleTypes().add(RuleType.ТЕМПЕРАТУРА_ВОДЫ);
+        }
+        if (plan.getTaskByType(TaskType.ПОЛОЖИТЬ_МЯТУ).isPresent()){
+            boolean mint = teaRuleSet.getIsMint();
+            rulesModel.setMint(mint);
+            rulesModel.getRuleTypes().add(RuleType.НАЛИЧИЕ_МЯТЫ);
+        }
+        if (rulesModel.getRuleTypes().isEmpty())
+            rulesModel.setIsEmpty(Boolean.TRUE);
+        else rulesModel.setIsEmpty(Boolean.FALSE);
+
+
 
         return rulesModel;
     }

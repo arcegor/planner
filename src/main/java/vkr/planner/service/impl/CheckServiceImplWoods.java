@@ -8,7 +8,7 @@ import vkr.planner.convert.RulesModelBuilder;
 import vkr.planner.exception.UnknownTypeException;
 import vkr.planner.model.CheckRequest;
 import vkr.planner.model.schedule.Plan;
-import vkr.planner.model.woods.RuleType;
+import vkr.planner.model.RuleType;
 import vkr.planner.model.woods.RulesModel;
 import vkr.planner.model.woods.TechnicalDescriptionWoods;
 import vkr.planner.convert.WoodsModelBuilder;

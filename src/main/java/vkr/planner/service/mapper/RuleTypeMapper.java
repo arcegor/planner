@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vkr.planner.exception.UnknownTypeException;
-import vkr.planner.model.woods.RuleType;
+import vkr.planner.model.RuleType;
 import vkr.planner.service.RulesCheckService;
 
 import java.util.List;

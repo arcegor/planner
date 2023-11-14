@@ -1,6 +1,7 @@
 package vkr.planner.service.impl.rules;
 
 import org.springframework.stereotype.Component;
+import vkr.planner.model.RuleType;
 import vkr.planner.model.woods.*;
 import vkr.planner.service.RulesCheckService;
 

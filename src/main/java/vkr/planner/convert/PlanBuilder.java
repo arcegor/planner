@@ -36,6 +36,11 @@ public class PlanBuilder {
                 .put(TaskType.ENCAPSULATION, "Герметизация")
                 .put(TaskType.CREATION_WOODS, "Установка лесов")
                 .put(TaskType.THERMAL_INSULATION, "Теплоизоляция")
+                .put(TaskType.ПОДГОТОВИТЬ_КРУЖКИ, "Подготовить кружки")
+                .put(TaskType.ВСКИПЯТИТЬ_ВОДУ, "Вскипятить воду")
+                .put(TaskType.НАЛИТЬ_ЗАВАРКУ, "Налить заварку")
+                .put(TaskType.ПОЛОЖИТЬ_МЯТУ, "Положить мяту")
+                .put(TaskType.НАЛИТЬ_КИПЯТОК, "Налить кипяток")
                 .build();
     }
     private Optional<TaskType> parseCell(String cell){
