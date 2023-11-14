@@ -3,6 +3,7 @@ package vkr.planner.convert;
 import org.springframework.stereotype.Component;
 import vkr.planner.model.schedule.Plan;
 import vkr.planner.model.schedule.Task;
+import vkr.planner.model.schedule.TaskType;
 import vkr.planner.model.woods.RuleType;
 import vkr.planner.model.woods.RulesModel;
 import vkr.planner.model.woods.WoodsRuleSet;
@@ -16,15 +17,15 @@ public class RulesModelBuilder {
         RulesModel rulesModel = new RulesModel();
         rulesModel.setRuleTypes(new ArrayList<>()); // Порядок обязателен !!!
 
-        if (plan.getTaskByType(Task.TaskType.VALIDATE_KKS).isPresent()) {
-            boolean isNeedToBeDone = !plan.getTaskByType(Task.TaskType.VALIDATE_KKS).get().isDone();
+        if (plan.getTaskByType(TaskType.VALIDATE_KKS).isPresent()) {
+            boolean isNeedToBeDone = !plan.getTaskByType(TaskType.VALIDATE_KKS).get().isDone();
             if (!woodsRuleSet.getKksToInsulate().isEmpty() && isNeedToBeDone){
                 rulesModel.setKksToInsulate(woodsRuleSet.getKksToInsulate());
                 rulesModel.getRuleTypes().add(RuleType.KKS);
             }
         }
-        if (plan.getTaskByType(Task.TaskType.CREATION_WOODS).isPresent()){
-            boolean isNeedToBeDone = !plan.getTaskByType(Task.TaskType.CREATION_WOODS).get().isDone();
+        if (plan.getTaskByType(TaskType.CREATION_WOODS).isPresent()){
+            boolean isNeedToBeDone = !plan.getTaskByType(TaskType.CREATION_WOODS).get().isDone();
             if (isNeedToBeDone){
                 if (rulesModel.getMinHeightOfWoodsToCreate() == null)
                     rulesModel.setMinHeightOfWoodsToCreate(1.5);
@@ -36,6 +37,7 @@ public class RulesModelBuilder {
         if (rulesModel.getRuleTypes().isEmpty())
             rulesModel.setIsEmpty(Boolean.TRUE);
         else rulesModel.setIsEmpty(Boolean.FALSE);
+
         return rulesModel;
     }
 }

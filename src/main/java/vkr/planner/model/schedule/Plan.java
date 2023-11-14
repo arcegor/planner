@@ -23,7 +23,7 @@ public class Plan {
         this.name = name;
     }
 
-    public Optional<Task> getTaskByType(Task.TaskType taskType){
+    public Optional<Task> getTaskByType(TaskType taskType){
         return this.getTaskList().stream()
                 .filter(task -> task.getTaskType().equals(taskType))
                 .findFirst();

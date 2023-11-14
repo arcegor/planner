@@ -30,11 +30,4 @@ public class Task {
     public void setDone(String done){
         this.isDone = done.contains("да");
     }
-
-    public enum TaskType{
-        VALIDATE_KKS,
-        ENCAPSULATION,
-        CREATION_WOODS,
-        THERMAL_INSULATION
-    }
 }

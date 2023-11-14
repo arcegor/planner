@@ -7,7 +7,7 @@ import lombok.Setter;
 import org.springframework.stereotype.Component;
 import vkr.planner.model.schedule.Plan;
 import vkr.planner.model.schedule.Task;
-import vkr.planner.model.woods.*;
+import vkr.planner.model.schedule.TaskType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.Optional;
 @Setter
 public class PlanBuilder {
 
-    private Map<Task.TaskType, String> cellPatternEnumTypeStringMap;
+    private Map<TaskType, String> cellPatternEnumTypeStringMap;
     private Map<Integer, List<String>> excelTable;
 
     public static Integer ID_INDEX = 0;
@@ -31,21 +31,21 @@ public class PlanBuilder {
 
     @PostConstruct
     public void init(){
-        this.cellPatternEnumTypeStringMap = ImmutableMap.<Task.TaskType, String>builder()
-                .put(Task.TaskType.VALIDATE_KKS, "Проверка кодов ККС")
-                .put(Task.TaskType.ENCAPSULATION, "Герметизация")
-                .put(Task.TaskType.CREATION_WOODS, "Установка лесов")
-                .put(Task.TaskType.THERMAL_INSULATION, "Теплоизоляция")
+        this.cellPatternEnumTypeStringMap = ImmutableMap.<TaskType, String>builder()
+                .put(TaskType.VALIDATE_KKS, "Проверка кодов ККС")
+                .put(TaskType.ENCAPSULATION, "Герметизация")
+                .put(TaskType.CREATION_WOODS, "Установка лесов")
+                .put(TaskType.THERMAL_INSULATION, "Теплоизоляция")
                 .build();
     }
-    private Optional<Task.TaskType> parseCell(String cell){
+    private Optional<TaskType> parseCell(String cell){
         return cellPatternEnumTypeStringMap.entrySet().stream()
                 .filter(e -> !cell.trim().isEmpty())
                 .filter(e -> isContainsSubstring(cell, e.getValue()))
                 .map(Map.Entry::getKey)
                 .findFirst();
     }
-    private Optional<Task.TaskType> parseRow(List<String> row){
+    private Optional<TaskType> parseRow(List<String> row){
         return row.stream()
                 .map(this::parseCell)
                 .filter(Optional::isPresent)
@@ -62,12 +62,11 @@ public class PlanBuilder {
         List<Task> taskList = new ArrayList<>();
         try {
             for (Integer key: excelTable.keySet()){
-                Optional<Task.TaskType> cellPatternEnumType = parseRow(excelTable.get(key));
+                Optional<TaskType> cellPatternEnumType = parseRow(excelTable.get(key));
                 if (cellPatternEnumType.isEmpty())
                     continue;
                 Task task = new Task();
                 task.setTaskType(cellPatternEnumType.get());
-                task.setDone(excelTable.get(key).get(IS_DONE_INDEX));
                 taskList.add(task);
             }
             plan.setTaskList(taskList);
