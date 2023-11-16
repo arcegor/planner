@@ -5,8 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vkr.planner.exception.UnknownTypeException;
-import vkr.planner.model.RuleType;
-import vkr.planner.service.RulesCheckService;
+import vkr.planner.model.schedule.RuleType;
+import vkr.planner.service.CheckRuleService;
 
 import java.util.List;
 import java.util.Map;
@@ -17,19 +17,19 @@ import java.util.stream.Collectors;
 public class RuleTypeMapper {
     public static final RuleType UNKNOWN_TYPE_MESSAGE = RuleType.UNKNOWN;
     @Autowired
-    private final List<RulesCheckService> rulesCheckServices;
-    private Map<RuleType, RulesCheckService> rulesMappingRulesCheckService;
+    private final List<CheckRuleService> checkRuleServices;
+    private Map<RuleType, CheckRuleService> rulesMappingRulesCheckService;
 
-    public RuleTypeMapper(List<RulesCheckService> rulesCheckServices) {
-        this.rulesCheckServices = rulesCheckServices;
+    public RuleTypeMapper(List<CheckRuleService> checkRuleServices) {
+        this.checkRuleServices = checkRuleServices;
     }
     @PostConstruct
     public void init() {
-        rulesMappingRulesCheckService = rulesCheckServices.stream()
-                .collect(Collectors.toMap(RulesCheckService::getRuleType, Function.identity()));
+        rulesMappingRulesCheckService = checkRuleServices.stream()
+                .collect(Collectors.toMap(CheckRuleService::getRuleType, Function.identity()));
     }
     @NotNull
-    public RulesCheckService getRulesCheckServiceByRuleType(RuleType requestType) throws UnknownTypeException {
+    public CheckRuleService getRulesCheckServiceByRuleType(RuleType requestType) throws UnknownTypeException {
         return Optional.ofNullable(rulesMappingRulesCheckService.get(requestType)).orElseThrow(() ->
                 new UnknownTypeException(UNKNOWN_TYPE_MESSAGE.description));
     }

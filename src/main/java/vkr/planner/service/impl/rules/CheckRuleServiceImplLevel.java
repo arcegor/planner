@@ -1,21 +1,21 @@
 package vkr.planner.service.impl.rules;
 
 import org.springframework.stereotype.Component;
-import vkr.planner.model.RuleType;
+import vkr.planner.model.schedule.RuleType;
 import vkr.planner.model.woods.*;
-import vkr.planner.service.RulesCheckService;
+import vkr.planner.service.CheckRuleService;
 
 import java.util.*;
 
 @Component
-public class RulesCheckServiceImplLevel implements RulesCheckService<RulesModel, TechnicalDescriptionWoods> {
+public class CheckRuleServiceImplLevel implements CheckRuleService<CheckScenarioWoods, TechnicalDescriptionWoods> {
     public static final RuleType RULE_TYPE = RuleType.LEVEL;
     @Override
-    public TechnicalDescriptionWoods checkByRule(RulesModel rulesModel, TechnicalDescriptionWoods technicalDescriptionWoods) {
+    public TechnicalDescriptionWoods checkByRule(CheckScenarioWoods checkScenarioWoods, TechnicalDescriptionWoods technicalDescriptionWoods) {
         Map<Pipe, Double> woodsLevels =new HashMap<>();
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Проходки, превыщающие высоту ").append(rulesModel.getMinHeightOfWoodsToCreate()).append(" :\n");
-        double level = rulesModel.getMinHeightOfWoodsToCreate();
+        stringBuilder.append("Проходки, превыщающие высоту ").append(checkScenarioWoods.getMinHeightOfWoodsToCreate()).append(" :\n");
+        double level = checkScenarioWoods.getMinHeightOfWoodsToCreate();
         technicalDescriptionWoods.getAreaList().stream()
                 .flatMap(area -> area.getPipeList().stream())
                 .filter(pipe -> Math.abs(pipe.getZ() - pipe.getLevel()) > level)

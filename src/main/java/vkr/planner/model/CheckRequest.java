@@ -1,9 +1,7 @@
 package vkr.planner.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.Data;
 import lombok.ToString;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,8 +13,7 @@ import java.io.Serializable;
 public class CheckRequest implements Serializable {
 
     @JsonProperty(value = "requestType")
-    private String requestType;
-
+    private String objectType;
     @JsonProperty(value = "requestRules")
     private String requestRules;
 
@@ -29,8 +26,8 @@ public class CheckRequest implements Serializable {
     @JsonProperty(value = "result")
     private String result;
 
-    public CheckRequest(String requestType, String requestRules) {
-        this.requestType = requestType;
+    public CheckRequest(String objectType, String requestRules) {
+        this.objectType = objectType;
         this.requestRules = requestRules;
     }
 

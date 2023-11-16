@@ -10,23 +10,12 @@ import java.time.Duration;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Task {
-    private String name;
-    private TaskType taskType;
-    private int order; // в контексте плана
+
+    private TaskType taskType; // тип задачи
     private Duration duration; // номинальная длительность в днях
-    private boolean isBlocker; // является ли блокером в плане (означает, что пока не будет выполнено,
-                               // следующие по порядку задачи начинать нельзя)
     private int costs; // издержки/затраты
     private boolean isDone; // выполнено или нет
-    public Task(String name){
-        this.name = name;
-    }
-    public Task(String string, int i, Duration duration, boolean b, int i1) {
-    }
-
-    public void setBlocker(String blocker){
-        this.isBlocker = blocker.contains("да");
-    }
+    private String result; // результат проверки задачи
     public void setDone(String done){
         this.isDone = done.contains("да");
     }

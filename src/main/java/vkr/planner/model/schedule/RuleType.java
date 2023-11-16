@@ -1,6 +1,6 @@
-package vkr.planner.model;
+package vkr.planner.model.schedule;
 
-public enum RuleType {
+public enum RuleType { // Набор правил
     PLAN_VALIDATION("Валидация плана-графика"),
     KKS("Коды ККС теплоизолируемых проходок"),
     AREA("Проходки со смежными помещениями"),

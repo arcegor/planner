@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vkr.planner.exception.UnknownTypeException;
+import vkr.planner.model.schedule.ObjectType;
 import vkr.planner.service.CheckService;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public class RequestTypeMapper {
     @Autowired
     private final List<CheckService> requestTypes;
 
-    private Map<String, CheckService> requestTypeMappingCheckService;
+    private Map<ObjectType, CheckService> requestTypeMappingCheckService;
 
     public RequestTypeMapper(List<CheckService> requestTypes) {
         this.requestTypes = requestTypes;
@@ -28,11 +29,11 @@ public class RequestTypeMapper {
     @PostConstruct
     public void init() {
         requestTypeMappingCheckService = requestTypes.stream()
-                .collect(Collectors.toMap(CheckService::getRequestType, Function.identity()));
+                .collect(Collectors.toMap(CheckService::getObjectType, Function.identity()));
     }
     @NotNull
-    public CheckService getCheckServiceByRequestType(String requestType) throws UnknownTypeException {
-        return Optional.ofNullable(requestTypeMappingCheckService.get(requestType)).orElseThrow(() ->
+    public CheckService getCheckServiceByRequestType(ObjectType objectType) throws UnknownTypeException {
+        return Optional.ofNullable(requestTypeMappingCheckService.get(objectType)).orElseThrow(() ->
                 new UnknownTypeException(UNKNOWN_TYPE_MESSAGE));
     }
 }
