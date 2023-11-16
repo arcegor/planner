@@ -4,7 +4,8 @@ public enum ObjectType {
     РЕАКТОР("Реактор"),
     КУХНЯ("Кухня");
 
-    ObjectType(String кухня) {
+    ObjectType(String description) {
+        this.description = description;
     }
-
+    public final String description;
 }
