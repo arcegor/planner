@@ -21,19 +21,16 @@ public class WoodsScenarioBuilder implements CheckScenarioBuilder<CheckScenarioW
         checkScenarioWoods.setRuleTypes(new ArrayList<>()); // Порядок обязателен !!!
 
         if (plan.getTaskByType(TaskType.VALIDATE_KKS).isPresent()) {
-            boolean isNeedToBeDone = !plan.getTaskByType(TaskType.VALIDATE_KKS).get().isDone();
-            if (!ruleSet.getKksToInsulate().isEmpty() && isNeedToBeDone){
+
+            if (!ruleSet.getKksToInsulate().isEmpty()){
                 checkScenarioWoods.setKksToInsulate(ruleSet.getKksToInsulate());
                 checkScenarioWoods.getRuleTypes().add(RuleType.KKS);
             }
         }
         if (plan.getTaskByType(TaskType.CREATION_WOODS).isPresent()){
-            boolean isNeedToBeDone = !plan.getTaskByType(TaskType.CREATION_WOODS).get().isDone();
-            if (isNeedToBeDone){
-                if (checkScenarioWoods.getMinHeightOfWoodsToCreate() == null)
-                    checkScenarioWoods.setMinHeightOfWoodsToCreate(1.5);
-                else checkScenarioWoods.setMinHeightOfWoodsToCreate(ruleSet.getMinHeightOfWoodsToCreate());
-            }
+            if (checkScenarioWoods.getMinHeightOfWoodsToCreate() == null)
+                checkScenarioWoods.setMinHeightOfWoodsToCreate(1.5);
+            else checkScenarioWoods.setMinHeightOfWoodsToCreate(ruleSet.getMinHeightOfWoodsToCreate());
             checkScenarioWoods.getRuleTypes().add(RuleType.LEVEL);
         }
         if (checkScenarioWoods.getRuleTypes().isEmpty())

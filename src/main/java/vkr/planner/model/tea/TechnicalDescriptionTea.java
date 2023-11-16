@@ -1,24 +1,24 @@
 package vkr.planner.model.tea;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import vkr.planner.model.schedule.RuleType;
+import vkr.planner.model.schedule.TechnicalDescription;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class TechnicalDescriptionTea {
+public class TechnicalDescriptionTea extends TechnicalDescription {
     private int volume;
     private int temp;
     private int mintCount;
     private Map<RuleType, String> ruleTypeMapResult = new HashMap<>();
 
-    public TechnicalDescriptionTea(int volume, int temp) {
+    public TechnicalDescriptionTea(int volume, int i) {
         this.volume = volume;
-        this.temp = temp;
+        this.temp = i;
     }
 }

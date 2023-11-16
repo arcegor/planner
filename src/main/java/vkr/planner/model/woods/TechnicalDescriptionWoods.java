@@ -5,13 +5,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import vkr.planner.model.schedule.RuleType;
+import vkr.planner.model.schedule.TechnicalDescription;
 
 import java.util.*;
 
 @Setter
 @Getter
 @NoArgsConstructor
-public class TechnicalDescriptionWoods{
+public class TechnicalDescriptionWoods extends TechnicalDescription {
 
     private List<Area> areaList = new ArrayList<>();
 

@@ -12,4 +12,5 @@ import java.util.List;
 public class Object {
     private ObjectType objectType;
     private List<Plan> planList;
+    private TechnicalDescription technicalDescription;
 }
