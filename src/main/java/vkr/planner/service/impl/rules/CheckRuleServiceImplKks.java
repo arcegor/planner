@@ -8,16 +8,16 @@ import vkr.planner.service.CheckRuleService;
 import java.util.List;
 
 @Component
-public class CheckRuleServiceImplKks implements CheckRuleService<CheckScenarioWoods, TechnicalDescriptionWoods> {
+public class CheckRuleServiceImplKks implements CheckRuleService<CheckPlanWoods, TechnicalDescriptionWoods> {
     public static final RuleType RULE_TYPE = RuleType.KKS;
     @Override
-    public TechnicalDescriptionWoods checkByRule(CheckScenarioWoods checkScenarioWoods, TechnicalDescriptionWoods technicalDescriptionWoods) {
+    public TechnicalDescriptionWoods checkByRule(CheckPlanWoods checkPlanWoods, TechnicalDescriptionWoods technicalDescriptionWoods) {
 
         List<Pipe> collisionPipeList = technicalDescriptionWoods.getAreaList().stream()
                 .flatMap(area -> area.getPipeList().stream())
                 .filter(pipe ->
-                            checkScenarioWoods.getKksToInsulate().contains(pipe.getKks()) && !pipe.isNeedToBeThermallyTnsulated()
-                        ||  !checkScenarioWoods.getKksToInsulate().contains(pipe.getKks()) && pipe.isNeedToBeThermallyTnsulated()
+                            checkPlanWoods.getKksToInsulate().contains(pipe.getKks()) && !pipe.isNeedToBeThermallyTnsulated()
+                        ||  !checkPlanWoods.getKksToInsulate().contains(pipe.getKks()) && pipe.isNeedToBeThermallyTnsulated()
                         )
                 .toList();
         technicalDescriptionWoods.getRuleTypeResult().put(RuleType.KKS, getResult(collisionPipeList));

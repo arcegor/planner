@@ -1,7 +1,7 @@
 package vkr.planner.model.schedule;
 
-public enum PlanType {
+public enum ProjectType {
     ЗАВАРИВАНИЕ_ЧАЯ,
     ГЛАЖКА,
-    СТРОЙКА_РЕАКТОР
+    ГЕРМЕТИЗАЦИЯ_ТРУБЫ
 }

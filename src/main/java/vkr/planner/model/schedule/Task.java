@@ -11,7 +11,6 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Task {
-
     private TaskType taskType; // тип задачи
     private Duration duration; // номинальная длительность в днях
     private Date date;

@@ -9,22 +9,22 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
-public class CheckRuleServiceImplArea implements CheckRuleService<CheckScenarioWoods, TechnicalDescriptionWoods> {
+public class CheckRuleServiceImplArea implements CheckRuleService<CheckPlanWoods, TechnicalDescriptionWoods> {
     public static final RuleType RULE_TYPE = RuleType.AREA;
     @Override
-    public TechnicalDescriptionWoods checkByRule(CheckScenarioWoods checkScenarioWoods, TechnicalDescriptionWoods technicalDescriptionWoods) {
+    public TechnicalDescriptionWoods checkByRule(CheckPlanWoods checkPlanWoods, TechnicalDescriptionWoods technicalDescriptionWoods) {
         StringBuilder stringBuilder = new StringBuilder();
         for (Area area: technicalDescriptionWoods.getAreaList()){
             for (Pipe pipe : area.getPipeList()){
                 Set<String> result = pipe.getNeighbouringAreas().stream()
                         .distinct()
-                        .filter(checkScenarioWoods.getNeighboringAreasToCheck()::contains)
+                        .filter(checkPlanWoods.getNeighboringAreasToCheck()::contains)
                         .collect(Collectors.toSet());
                 if (result.isEmpty())
                     continue;
                 stringBuilder.append(
                         String.format("Проходка %s совпадает по смежным помещениям : %s \n",
-                                pipe, String.join(", ", checkScenarioWoods.getNeighboringAreasToCheck()))
+                                pipe, String.join(", ", checkPlanWoods.getNeighboringAreasToCheck()))
                 );
             }
         }

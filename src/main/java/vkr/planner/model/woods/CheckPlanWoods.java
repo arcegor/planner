@@ -1,22 +1,18 @@
 package vkr.planner.model.woods;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import vkr.planner.model.schedule.RuleType;
+import lombok.Setter;
+import vkr.planner.model.schedule.Plan;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-public class CheckScenarioWoods {
-    private List<RuleType> ruleTypes;
+public class CheckPlanWoods extends Plan {
     private List<String> kksToInsulate;
     private List<String> neighboringAreasToCheck;
     private Boolean isValidateKksToInsulate;
     private Double minHeightOfWoodsToCreate;
-    private Boolean isEmpty;
-
-    public boolean getIsEmpty(){
-        return this.isEmpty;
-    }
 }

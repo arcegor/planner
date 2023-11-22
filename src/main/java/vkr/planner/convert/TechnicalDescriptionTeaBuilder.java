@@ -11,7 +11,7 @@ import java.util.Map;
 @Component
 @Getter
 @Setter
-public class TeaModelBuilder {
+public class TechnicalDescriptionTeaBuilder {
     private Map<Integer, List<String>> excelTable;
     public static Integer КОЛИЧЕСТВО_МЯТЫ = 1;
     public static Integer ТЕМПЕРАТУРА_ВОДЫ = 2;

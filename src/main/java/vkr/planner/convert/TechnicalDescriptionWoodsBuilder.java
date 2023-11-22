@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 @Component
 @Getter
 @Setter
-public class WoodsModelBuilder {
+public class TechnicalDescriptionWoodsBuilder {
     enum CellPatternEnumType{
         ТАБЛИЦА,
         ПЕРЕКРЫТИЕ,

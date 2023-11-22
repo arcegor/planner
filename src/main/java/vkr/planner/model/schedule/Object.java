@@ -11,6 +11,5 @@ import java.util.List;
 @NoArgsConstructor
 public class Object {
     private ObjectType objectType;
-    private List<Plan> planList;
-    private TechnicalDescription technicalDescription;
+    private List<Project> projectList;
 }

@@ -8,4 +8,7 @@ public enum ObjectType {
         this.description = description;
     }
     public final String description;
+    public ObjectType getByDescription(String description){
+        return ObjectType.valueOf(description);
+    }
 }

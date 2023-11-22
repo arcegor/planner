@@ -4,20 +4,19 @@ import com.google.common.collect.ImmutableMap;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.collections4.map.SingletonMap;
 import org.springframework.stereotype.Component;
-import vkr.planner.model.schedule.Plan;
+import vkr.planner.model.schedule.Project;
 import vkr.planner.model.schedule.Task;
 import vkr.planner.model.schedule.TaskType;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 @Getter
 @Setter
-public class PlanBuilder {
+public class ProjectBuilder {
 
     private Map<TaskType, String> cellPatternEnumTypeStringMap;
     private Map<Integer, List<String>> excelTable;
@@ -32,15 +31,8 @@ public class PlanBuilder {
     @PostConstruct
     public void init(){
         this.cellPatternEnumTypeStringMap = ImmutableMap.<TaskType, String>builder()
-                .put(TaskType.VALIDATE_KKS, "Проверка кодов ККС")
-                .put(TaskType.ENCAPSULATION, "Герметизация")
-                .put(TaskType.CREATION_WOODS, "Установка лесов")
-                .put(TaskType.THERMAL_INSULATION, "Теплоизоляция")
-                .put(TaskType.ПОДГОТОВИТЬ_КРУЖКИ, "Подготовить кружки")
-                .put(TaskType.ВСКИПЯТИТЬ_ВОДУ, "Вскипятить воду")
-                .put(TaskType.НАЛИТЬ_ЗАВАРКУ, "Налить заварку")
-                .put(TaskType.ПОЛОЖИТЬ_МЯТУ, "Положить мяту")
-                .put(TaskType.НАЛИТЬ_КИПЯТОК, "Налить кипяток")
+                .putAll(Arrays.stream(TaskType.values()).distinct()
+                        .collect(Collectors.toMap(value -> value, Enum::name)))
                 .build();
     }
     private Optional<TaskType> parseCell(String cell){
@@ -61,9 +53,9 @@ public class PlanBuilder {
         return cell.contains(pattern);
     }
 
-    public Plan convertMapToPlan(Map<Integer, List<String>> excelTable){
+    public Project convertMapToProject(Map<Integer, List<String>> excelTable){
         this.excelTable = excelTable;
-        Plan plan = new Plan();
+        Project project = new Project();
         List<Task> taskList = new ArrayList<>();
         try {
             for (Integer key: excelTable.keySet()){
@@ -74,10 +66,10 @@ public class PlanBuilder {
                 task.setTaskType(cellPatternEnumType.get());
                 taskList.add(task);
             }
-            plan.setTaskList(taskList);
+            project.setTaskList(taskList);
         }catch (Exception exception){
             throw new RuntimeException(exception.getMessage());
         }
-        return plan;
+        return project;
     }
 }

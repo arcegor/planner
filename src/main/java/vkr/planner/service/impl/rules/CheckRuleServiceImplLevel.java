@@ -8,14 +8,14 @@ import vkr.planner.service.CheckRuleService;
 import java.util.*;
 
 @Component
-public class CheckRuleServiceImplLevel implements CheckRuleService<CheckScenarioWoods, TechnicalDescriptionWoods> {
+public class CheckRuleServiceImplLevel implements CheckRuleService<CheckPlanWoods, TechnicalDescriptionWoods> {
     public static final RuleType RULE_TYPE = RuleType.LEVEL;
     @Override
-    public TechnicalDescriptionWoods checkByRule(CheckScenarioWoods checkScenarioWoods, TechnicalDescriptionWoods technicalDescriptionWoods) {
+    public TechnicalDescriptionWoods checkByRule(CheckPlanWoods checkPlanWoods, TechnicalDescriptionWoods technicalDescriptionWoods) {
         Map<Pipe, Double> woodsLevels =new HashMap<>();
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Проходки, превыщающие высоту ").append(checkScenarioWoods.getMinHeightOfWoodsToCreate()).append(" :\n");
-        double level = checkScenarioWoods.getMinHeightOfWoodsToCreate();
+        stringBuilder.append("Проходки, превыщающие высоту ").append(checkPlanWoods.getMinHeightOfWoodsToCreate()).append(" :\n");
+        double level = checkPlanWoods.getMinHeightOfWoodsToCreate();
         technicalDescriptionWoods.getAreaList().stream()
                 .flatMap(area -> area.getPipeList().stream())
                 .filter(pipe -> Math.abs(pipe.getZ() - pipe.getLevel()) > level)
