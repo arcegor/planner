@@ -1,5 +1,6 @@
 package vkr.planner.service.impl.plans;
 
+import org.springframework.stereotype.Component;
 import vkr.planner.model.schedule.Project;
 import vkr.planner.model.schedule.ProjectType;
 import vkr.planner.model.schedule.RuleType;
@@ -10,6 +11,7 @@ import vkr.planner.service.CheckPlanBuilder;
 
 import java.util.ArrayList;
 
+@Component
 public class PlanWoodsBuilder implements CheckPlanBuilder<CheckPlanWoods, WoodsRuleSet> {
     @Override
     public ProjectType getPlanType() {
@@ -20,18 +22,17 @@ public class PlanWoodsBuilder implements CheckPlanBuilder<CheckPlanWoods, WoodsR
         CheckPlanWoods checkPlanWoods = new CheckPlanWoods();
         checkPlanWoods.setRuleTypes(new ArrayList<>()); // Порядок обязателен !!!
 
-        if (project.getTaskByType(TaskType.VALIDATE_KKS).isPresent()) {
-
+        if (project.getTaskByType(TaskType.ПРОВЕРКА_КОДОВ_ККС).isPresent()) {
             if (!ruleSet.getKksToInsulate().isEmpty()){
                 checkPlanWoods.setKksToInsulate(ruleSet.getKksToInsulate());
                 checkPlanWoods.getRuleTypes().add(RuleType.KKS);
             }
         }
-        if (project.getTaskByType(TaskType.CREATION_WOODS).isPresent()){
-            if (checkPlanWoods.getMinHeightOfWoodsToCreate() == null)
-                checkPlanWoods.setMinHeightOfWoodsToCreate(1.5);
-            else checkPlanWoods.setMinHeightOfWoodsToCreate(ruleSet.getMinHeightOfWoodsToCreate());
+        if (project.getTaskByType(TaskType.УСТАНОВКА_ЛЕСОВ).isPresent()){
+            if (ruleSet.getMinHeightOfWoodsToCreate() != null){
+            checkPlanWoods.setMinHeightOfWoodsToCreate(ruleSet.getMinHeightOfWoodsToCreate());
             checkPlanWoods.getRuleTypes().add(RuleType.LEVEL);
+            }
         }
         if (checkPlanWoods.getRuleTypes().isEmpty())
             checkPlanWoods.setIsEmpty(Boolean.TRUE);

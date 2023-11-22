@@ -30,7 +30,7 @@ public class CheckRuleServiceImplKks implements CheckRuleService<CheckPlanWoods,
     }
 
     public String getResult(List<Pipe> collisionPipeList){
-        StringBuilder stringBuilder = new StringBuilder("Коллизии в проходках:\n");
+        StringBuilder stringBuilder = new StringBuilder("В ходе проверки выявлены коллизии в проходках:\n");
         for (Pipe pipe: collisionPipeList){
             stringBuilder.append(pipe).append(",\n");
         }

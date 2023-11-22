@@ -8,6 +8,7 @@ import vkr.planner.exception.UnknownTypeException;
 import vkr.planner.model.CheckRequest;
 import vkr.planner.model.schedule.ObjectType;
 import vkr.planner.model.schedule.Project;
+import vkr.planner.model.schedule.ProjectType;
 import vkr.planner.model.schedule.RuleType;
 import vkr.planner.model.tea.CheckPlanTea;
 import vkr.planner.model.tea.TechnicalDescriptionTea;
@@ -52,7 +53,8 @@ public class CheckServiceImplWoods implements CheckService<TechnicalDescriptionW
                 stringInputStreamMap.get(PROJECT)
         ));
         WoodsRuleSet woodsRuleSet = JsonUtils.parseJsonToObject(checkRequest.getRequestRules(), WoodsRuleSet.class);
-        project.setPlan((CheckPlanTea) getCheckPlanBuilder(project).build(woodsRuleSet, project));
+        project.setProjectType(ProjectType.ГЕРМЕТИЗАЦИЯ_ТРУБЫ);
+        project.setPlan((CheckPlanWoods) getCheckPlanBuilder(project).build(woodsRuleSet, project));
         project.setTechnicalDescription(convertToModel(stringInputStreamMap.get(TECHNICAL_DESCRIPTION),
                 new TechnicalDescriptionWoods()));
         if (project.getPlan().getIsEmpty())
