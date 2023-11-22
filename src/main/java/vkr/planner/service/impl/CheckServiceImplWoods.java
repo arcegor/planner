@@ -77,7 +77,7 @@ public class CheckServiceImplWoods implements CheckService<TechnicalDescriptionW
     }
     public void implementRules(Project project) throws UnknownTypeException {
         for (RuleType ruleType: project.getPlan().getRuleTypes()){
-            project.setTechnicalDescription((TechnicalDescriptionWoods) ruleTypeMapper.getRulesCheckServiceByRuleType(ruleType)
+            project.setPlan((CheckPlanWoods) ruleTypeMapper.getRulesCheckServiceByRuleType(ruleType)
                     .checkByRule(project.getPlan(), project.getTechnicalDescription()));
         }
     }
