@@ -13,7 +13,11 @@ import java.util.Date;
 public class Task {
     private TaskType taskType; // тип задачи
     private Duration duration; // номинальная длительность в днях
-    private Date date;
+    private Date date; // Дата
     private int costs; // издержки/затраты
     private String result; // результат проверки задачи
+    public Task(TaskType taskType, Date date){
+        this.date = date;
+        this.taskType = taskType;
+    }
 }

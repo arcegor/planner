@@ -13,10 +13,7 @@ import java.util.*;
 @Getter
 @NoArgsConstructor
 public class TechnicalDescriptionWoods extends TechnicalDescription {
-
     private List<Area> areaList = new ArrayList<>();
-
-    private Map<RuleType, String> ruleTypeResult = new HashMap<>();
 
     public List<Pipe> getAllPipeList(){
         return areaList.stream()

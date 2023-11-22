@@ -12,7 +12,7 @@ public class CheckRuleServiceImplMint implements CheckRuleService<CheckPlanTea, 
     @Override
     public TechnicalDescriptionTea checkByRule(CheckPlanTea checkPlanTea, TechnicalDescriptionTea technicalDescriptionTea) {
         if (!checkPlanTea.isMint()){
-            technicalDescriptionTea.getRuleTypeMapResult().put(RuleType.НАЛИЧИЕ_МЯТЫ,
+            technicalDescriptionTea.getRuleTypeResult().put(RuleType.НАЛИЧИЕ_МЯТЫ,
                     "Кладем мяту");
         }
         return technicalDescriptionTea;

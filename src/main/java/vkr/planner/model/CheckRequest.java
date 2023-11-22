@@ -18,7 +18,7 @@ public class CheckRequest implements Serializable {
     private String requestRules;
 
     @JsonProperty(value = "requestFile")
-    private MultipartFile requestFile;
+    private MultipartFile[] requestFile;
 
     @JsonProperty(value = "resultType")
     private ResultType resultType;

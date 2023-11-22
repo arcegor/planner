@@ -15,8 +15,6 @@ public class TechnicalDescriptionTea extends TechnicalDescription {
     private int volume;
     private int temp;
     private int mintCount;
-    private Map<RuleType, String> ruleTypeMapResult = new HashMap<>();
-
     public TechnicalDescriptionTea(int volume, int i) {
         this.volume = volume;
         this.temp = i;

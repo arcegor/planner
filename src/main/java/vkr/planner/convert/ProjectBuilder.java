@@ -10,6 +10,7 @@ import vkr.planner.model.schedule.Project;
 import vkr.planner.model.schedule.Task;
 import vkr.planner.model.schedule.TaskType;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -27,6 +28,7 @@ public class ProjectBuilder {
     public static Integer COSTS_INDEX = 3;
     public static Integer DURATION_INDEX = 4;
     public static Integer IS_BLOCKER_INDEX = 5;
+    public static Integer DATE_INDEX = 6;
 
     @PostConstruct
     public void init(){
@@ -56,6 +58,7 @@ public class ProjectBuilder {
     public Project convertMapToProject(Map<Integer, List<String>> excelTable){
         this.excelTable = excelTable;
         Project project = new Project();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         List<Task> taskList = new ArrayList<>();
         try {
             for (Integer key: excelTable.keySet()){
@@ -63,7 +66,8 @@ public class ProjectBuilder {
                 if (cellPatternEnumType.isEmpty())
                     continue;
                 Task task = new Task();
-                task.setTaskType(cellPatternEnumType.get());
+                task.setTaskType(TaskType.valueOf(excelTable.get(key).get(TASK_INDEX)));
+                task.setDate(formatter.parse(excelTable.get(key).get(DATE_INDEX)));
                 taskList.add(task);
             }
             project.setTaskList(taskList);

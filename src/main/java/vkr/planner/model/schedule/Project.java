@@ -14,8 +14,9 @@ import java.util.Optional;
 @AllArgsConstructor
 public class Project { // Проект
     private ProjectType projectType; // Тип проекта
-    private List<RuleType> ruleTypes; // Набор типов правил, из которых состоит тип проекта
-    private List<Task> taskList; // Список задач в проекте
+    private Plan plan; // План проверок по проекту
+    private List<RuleType> ruleTypes; // Набор типов правил для данного типа проекта
+    private List<Task> taskList; // Набор задач для данного типа проекта
     private boolean isValid; // Валидность проекта
     private Duration maxDuration; // Длительноть работ по проекту
     private int maxCosts; // Издержки по проекту
@@ -23,7 +24,7 @@ public class Project { // Проект
 
     public static final String PROJECT = "Проект";
     public static final String TECHNICAL_DESCRIPTION = "Техническое описание";
-    public Optional<Task> getTaskByType(TaskType taskType){ // Получаем задание по его типу
+    public Optional<Task> getTaskByType(TaskType taskType){ // Получаем задачу по ее типу
         return this.getTaskList().stream()
                 .filter(task -> task.getTaskType().equals(taskType))
                 .findFirst();

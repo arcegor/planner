@@ -18,6 +18,7 @@ import vkr.planner.service.CheckService;
 import vkr.planner.service.mapper.RuleTypeMapper;
 import vkr.planner.service.mapper.PlanBuilderMapper;
 import vkr.planner.utils.ExcelUtils;
+import vkr.planner.utils.FileUtils;
 import vkr.planner.utils.JsonUtils;
 import vkr.planner.utils.ZipUtils;
 
@@ -34,11 +35,8 @@ public class CheckServiceImplTea implements CheckService<TechnicalDescriptionTea
     public static final String NO_RULES = "Не передано никаких правил";
 
     public final ProjectBuilder projectBuilder;
-    @Autowired
     private final PlanBuilderMapper planBuilderMapper;
-    public TechnicalDescriptionTea technicalDescriptionTea;
     private final RuleTypeMapper ruleTypeMapper;
-    @Autowired
     private final TechnicalDescriptionTeaBuilder technicalDescriptionTeaBuilder;
 
 
@@ -51,24 +49,22 @@ public class CheckServiceImplTea implements CheckService<TechnicalDescriptionTea
 
     @Override
     public String check(CheckRequest checkRequest) throws IOException, InvalidFormatException, UnknownTypeException {
-        Map<String, InputStream> stringInputStreamMap =
-                ZipUtils.unzip(checkRequest.getRequestFile().getInputStream().readAllBytes());
+        Map<String, InputStream> stringInputStreamMap = FileUtils.getInput(checkRequest.getRequestFile());
         Project project = projectBuilder.convertMapToProject(ExcelUtils.parseExcelFromInputStreamToMap(
                 stringInputStreamMap.get(PROJECT)
         ));
         TeaRuleSet teaRuleSet = JsonUtils.parseJsonToObject(checkRequest.getRequestRules(),
                 TeaRuleSet.class);
-        technicalDescriptionTea = convertToModel(stringInputStreamMap.get(TECHNICAL_DESCRIPTION),
-                new TechnicalDescriptionTea());
-        CheckPlanBuilder checkPlanBuilder = getCheckPlanBuilder(project);
-        CheckPlanTea checkPlanTea = (CheckPlanTea) checkPlanBuilder.build(teaRuleSet, project);
 
-        if (checkPlanTea.getIsEmpty())
+        project.setPlan((CheckPlanTea) getCheckPlanBuilder(project).build(teaRuleSet, project));
+        project.setTechnicalDescription(convertToModel(stringInputStreamMap.get(TECHNICAL_DESCRIPTION),
+                new TechnicalDescriptionTea()));
+        if (project.getPlan().getIsEmpty())
             return NO_RULES;
 
-        implementRules(checkPlanTea);
+        implementRules(project);
 
-        return getResult();
+        return getResult(project);
     }
     @Override
     public TechnicalDescriptionTea convertToModel(InputStream inputStream, TechnicalDescriptionTea obj) throws IOException, InvalidFormatException {
@@ -76,14 +72,14 @@ public class CheckServiceImplTea implements CheckService<TechnicalDescriptionTea
                 ExcelUtils.parseExcelFromInputStreamToMap(inputStream)
         );
     }
-    public void implementRules(CheckPlanTea checkPlanTea) throws UnknownTypeException {
-        for (RuleType ruleType: checkPlanTea.getRuleTypes()){
-             technicalDescriptionTea = (TechnicalDescriptionTea) ruleTypeMapper.getRulesCheckServiceByRuleType(ruleType)
-                    .checkByRule(checkPlanTea, technicalDescriptionTea);
+    public void implementRules(Project project) throws UnknownTypeException {
+        for (RuleType ruleType: project.getPlan().getRuleTypes()){
+             project.setTechnicalDescription((TechnicalDescriptionTea) ruleTypeMapper.getRulesCheckServiceByRuleType(ruleType)
+                    .checkByRule(project.getPlan(), project.getTechnicalDescription()));
         }
     }
-    public String getResult(){
-        return String.join("\n", technicalDescriptionTea.getRuleTypeMapResult().values());
+    public String getResult(Project project){
+        return String.join("\n", project.getTechnicalDescription().getRuleTypeResult().values());
     }
 
     @Override

@@ -12,7 +12,7 @@ public class CheckRuleServiceImplTemp implements CheckRuleService<CheckPlanTea, 
     @Override
     public TechnicalDescriptionTea checkByRule(CheckPlanTea checkPlanTea, TechnicalDescriptionTea technicalDescriptionTea) {
         if (checkPlanTea.getTemp() < technicalDescriptionTea.getTemp()){
-            technicalDescriptionTea.getRuleTypeMapResult().put(RuleType.ТЕМПЕРАТУРА_ВОДЫ,
+            technicalDescriptionTea.getRuleTypeResult().put(RuleType.ТЕМПЕРАТУРА_ВОДЫ,
                     "Кипятим воду до 100 градусов");
         }
         return technicalDescriptionTea;
