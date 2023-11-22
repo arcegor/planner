@@ -23,13 +23,15 @@ public class PlanTeaBuilder implements CheckPlanBuilder<CheckPlanTea, TeaRuleSet
         checkPlanTea.setRuleTypes(new ArrayList<>()); // Порядок обязателен !!!
 
 
-        if (project.getTaskByType(TaskType.ВСКИПЯТИТЬ_ВОДУ).isPresent()){
+        if (project.getTaskByType(TaskType.ВСКИПЯТИТЬ_ВОДУ).isPresent() &&
+            ruleSet.getTemp() != null){
             int temp = ruleSet.getTemp();
             checkPlanTea.setTemp(temp);
             checkPlanTea.getRuleTypes().add(RuleType.ТЕМПЕРАТУРА_ВОДЫ);
         }
-        if (project.getTaskByType(TaskType.ПОЛОЖИТЬ_МЯТУ).isPresent()){
-            boolean mint = ruleSet.getIsMint();
+        if (project.getTaskByType(TaskType.ПОЛОЖИТЬ_МЯТУ).isPresent() &&
+            ruleSet.getIsMint() != null){
+            boolean mint = checkPlanTea.getIsMint(ruleSet.getIsMint());
             checkPlanTea.setMint(mint);
             checkPlanTea.getRuleTypes().add(RuleType.НАЛИЧИЕ_МЯТЫ);
         }

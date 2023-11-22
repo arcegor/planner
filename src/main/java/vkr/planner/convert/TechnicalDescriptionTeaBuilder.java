@@ -13,21 +13,19 @@ import java.util.Map;
 @Setter
 public class TechnicalDescriptionTeaBuilder {
     private Map<Integer, List<String>> excelTable;
-    public static Integer КОЛИЧЕСТВО_МЯТЫ = 1;
-    public static Integer ТЕМПЕРАТУРА_ВОДЫ = 2;
-    public static Integer ОБЪЕМ_ЧАЙНИКА = 3;
+    public static Integer КОЛИЧЕСТВО_МЯТЫ = 0;
+    public static Integer ТЕМПЕРАТУРА_ВОДЫ = 1;
+    public static Integer ОБЪЕМ_ЧАЙНИКА = 2;
 
     public TechnicalDescriptionTea convertMapToTechnicalDescriptionTea(Map<Integer, List<String>> excelTable){
         TechnicalDescriptionTea technicalDescriptionTea = new TechnicalDescriptionTea();
         this.excelTable = excelTable;
 
         try {
-            for (Integer key: excelTable.keySet()){
-
-                technicalDescriptionTea.setTemp(Integer.parseInt(excelTable.get(key).get(ТЕМПЕРАТУРА_ВОДЫ)));
-                technicalDescriptionTea.setVolume(Integer.parseInt(excelTable.get(key).get(КОЛИЧЕСТВО_МЯТЫ)));
-                technicalDescriptionTea.setMintCount(Integer.parseInt(excelTable.get(key).get(КОЛИЧЕСТВО_МЯТЫ)));
-            }
+            int key = 1;
+            technicalDescriptionTea.setTemp((int) Double.parseDouble(excelTable.get(key).get(ТЕМПЕРАТУРА_ВОДЫ)));
+            technicalDescriptionTea.setVolume((int) Double.parseDouble(excelTable.get(key).get(ОБЪЕМ_ЧАЙНИКА)));
+            technicalDescriptionTea.setMintCount((int) Double.parseDouble(excelTable.get(key).get(КОЛИЧЕСТВО_МЯТЫ)));
         }catch (Exception exception){
             throw new RuntimeException(exception.getMessage());
         }

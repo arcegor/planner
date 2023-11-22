@@ -10,4 +10,7 @@ import vkr.planner.model.schedule.Plan;
 public class CheckPlanTea extends Plan {
     private int temp;
     private boolean isMint;
+    public boolean getIsMint(String isMint){
+        return isMint.equalsIgnoreCase("да");
+    }
 }

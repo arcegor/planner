@@ -11,7 +11,7 @@ import java.util.*;
 public class CheckRuleServiceImplLevel implements CheckRuleService<CheckPlanWoods, TechnicalDescriptionWoods> {
     public static final RuleType RULE_TYPE = RuleType.LEVEL;
     @Override
-    public TechnicalDescriptionWoods checkByRule(CheckPlanWoods checkPlanWoods, TechnicalDescriptionWoods technicalDescriptionWoods) {
+    public CheckPlanWoods checkByRule(CheckPlanWoods checkPlanWoods, TechnicalDescriptionWoods technicalDescriptionWoods) {
         Map<Pipe, Double> woodsLevels =new HashMap<>();
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Проходки, превыщающие высоту ").append(checkPlanWoods.getMinHeightOfWoodsToCreate()).append(" :\n");
@@ -22,8 +22,8 @@ public class CheckRuleServiceImplLevel implements CheckRuleService<CheckPlanWood
                 .forEach(pipe ->
                         woodsLevels.put(pipe, round(Math.abs((pipe.getZ() - pipe.getLevel())), 3))
                 );
-        technicalDescriptionWoods.getRuleTypeResult().put(RuleType.LEVEL, getResult(woodsLevels, stringBuilder));
-        return technicalDescriptionWoods;
+        checkPlanWoods.getRuleTypeResult().put(RuleType.LEVEL, getResult(woodsLevels, stringBuilder));
+        return checkPlanWoods;
     }
     public static double round(double value, int places) {
         double scale = Math.pow(10, places);

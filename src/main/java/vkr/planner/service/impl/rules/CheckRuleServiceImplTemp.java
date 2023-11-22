@@ -10,12 +10,14 @@ import vkr.planner.service.CheckRuleService;
 public class CheckRuleServiceImplTemp implements CheckRuleService<CheckPlanTea, TechnicalDescriptionTea> {
     public static final RuleType RULE_TYPE = RuleType.ТЕМПЕРАТУРА_ВОДЫ;
     @Override
-    public TechnicalDescriptionTea checkByRule(CheckPlanTea checkPlanTea, TechnicalDescriptionTea technicalDescriptionTea) {
+    public CheckPlanTea checkByRule(CheckPlanTea checkPlanTea, TechnicalDescriptionTea technicalDescriptionTea) {
         if (checkPlanTea.getTemp() < technicalDescriptionTea.getTemp()){
-            technicalDescriptionTea.getRuleTypeResult().put(RuleType.ТЕМПЕРАТУРА_ВОДЫ,
+            checkPlanTea.getRuleTypeResult().put(RuleType.ТЕМПЕРАТУРА_ВОДЫ,
                     "Кипятим воду до 100 градусов");
         }
-        return technicalDescriptionTea;
+        else checkPlanTea.getRuleTypeResult().put(RuleType.ТЕМПЕРАТУРА_ВОДЫ,
+                "Вода уже вскипячена");
+        return checkPlanTea;
     }
 
     @Override

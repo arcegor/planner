@@ -10,7 +10,7 @@ public class TeaRuleSet implements Serializable{
     @JsonProperty(value = "Температура воды")
     public Integer temp;
     @JsonProperty(value = "Наличие мяты")
-    public Boolean isMint;
-    }
+    public String isMint;
+}
 
 

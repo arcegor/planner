@@ -20,7 +20,7 @@ public class ProcessCheck {
     }
 
     public void process(CheckRequest checkRequest) throws UnknownTypeException {
-        CheckService checkService = requestTypeMapper.getCheckServiceByRequestType(ObjectType.valueOf(checkRequest.getObjectType()));
+        CheckService checkService = requestTypeMapper.getCheckServiceByRequestType(ObjectType.valueOf(checkRequest.getObjectType().toUpperCase()));
         String result;
         try {
             result = checkService.check(checkRequest);

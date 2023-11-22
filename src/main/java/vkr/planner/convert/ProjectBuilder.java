@@ -12,6 +12,7 @@ import vkr.planner.model.schedule.TaskType;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component
@@ -34,7 +35,12 @@ public class ProjectBuilder {
     public void init(){
         this.cellPatternEnumTypeStringMap = ImmutableMap.<TaskType, String>builder()
                 .putAll(Arrays.stream(TaskType.values()).distinct()
-                        .collect(Collectors.toMap(value -> value, Enum::name)))
+                        .collect(Collectors.toMap(
+                                Function.identity(),
+                                TaskType::getName,
+                                (key1, key2) -> key1,
+                                HashMap::new
+                        )))
                 .build();
     }
     private Optional<TaskType> parseCell(String cell){
@@ -66,8 +72,8 @@ public class ProjectBuilder {
                 if (cellPatternEnumType.isEmpty())
                     continue;
                 Task task = new Task();
-                task.setTaskType(TaskType.valueOf(excelTable.get(key).get(TASK_INDEX)));
-                task.setDate(formatter.parse(excelTable.get(key).get(DATE_INDEX)));
+                task.setTaskType(TaskType.getEnum(excelTable.get(key).get(TASK_INDEX)));
+                //task.setDate(formatter.parse(excelTable.get(key).get(DATE_INDEX)));
                 taskList.add(task);
             }
             project.setTaskList(taskList);

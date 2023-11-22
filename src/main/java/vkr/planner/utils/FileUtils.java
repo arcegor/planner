@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class FileUtils {
 
@@ -21,7 +22,8 @@ public class FileUtils {
         }
         if (files.length != 0){ // Если excel по отдельности
             for (MultipartFile multipartFile : files){
-                stringInputStreamMap.put(multipartFile.getName(), multipartFile.getInputStream());
+                stringInputStreamMap.put(Objects.requireNonNull(multipartFile.getOriginalFilename()).split("\\.")[0],
+                        multipartFile.getInputStream());
             }
         }
         return stringInputStreamMap;

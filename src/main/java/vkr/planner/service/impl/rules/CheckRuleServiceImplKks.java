@@ -11,7 +11,7 @@ import java.util.List;
 public class CheckRuleServiceImplKks implements CheckRuleService<CheckPlanWoods, TechnicalDescriptionWoods> {
     public static final RuleType RULE_TYPE = RuleType.KKS;
     @Override
-    public TechnicalDescriptionWoods checkByRule(CheckPlanWoods checkPlanWoods, TechnicalDescriptionWoods technicalDescriptionWoods) {
+    public CheckPlanWoods checkByRule(CheckPlanWoods checkPlanWoods, TechnicalDescriptionWoods technicalDescriptionWoods) {
 
         List<Pipe> collisionPipeList = technicalDescriptionWoods.getAreaList().stream()
                 .flatMap(area -> area.getPipeList().stream())
@@ -20,10 +20,9 @@ public class CheckRuleServiceImplKks implements CheckRuleService<CheckPlanWoods,
                         ||  !checkPlanWoods.getKksToInsulate().contains(pipe.getKks()) && pipe.isNeedToBeThermallyTnsulated()
                         )
                 .toList();
-        technicalDescriptionWoods.getRuleTypeResult().put(RuleType.KKS, getResult(collisionPipeList));
+        checkPlanWoods.getRuleTypeResult().put(RuleType.KKS, getResult(collisionPipeList));
         collisionPipeList.forEach(pipe -> technicalDescriptionWoods.updatePipe(pipe, fixPipeThermalIsolation(pipe)));
-
-        return technicalDescriptionWoods;
+        return checkPlanWoods;
     }
     @Override
     public RuleType getRuleType() {

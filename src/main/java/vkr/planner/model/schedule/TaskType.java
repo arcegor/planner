@@ -1,5 +1,7 @@
 package vkr.planner.model.schedule;
 
+import org.apache.poi.ss.formula.functions.T;
+
 public enum TaskType{
     VALIDATE_KKS("Проверка кодов ККС"),
     ENCAPSULATION("Герметизация"),
@@ -15,4 +17,12 @@ public enum TaskType{
         this.name = name;
     }
     public final String name;
+    public String getName(){
+        return this.name;
+    }
+    public static TaskType getEnum(String value) {
+        for(TaskType v : values())
+            if(v.getName().equalsIgnoreCase(value)) return v;
+        throw new IllegalArgumentException();
+    }
 }

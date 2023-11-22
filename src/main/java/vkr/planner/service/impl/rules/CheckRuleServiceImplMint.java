@@ -10,12 +10,13 @@ import vkr.planner.service.CheckRuleService;
 public class CheckRuleServiceImplMint implements CheckRuleService<CheckPlanTea, TechnicalDescriptionTea> {
     public static final RuleType RULE_TYPE = RuleType.НАЛИЧИЕ_МЯТЫ;
     @Override
-    public TechnicalDescriptionTea checkByRule(CheckPlanTea checkPlanTea, TechnicalDescriptionTea technicalDescriptionTea) {
+    public CheckPlanTea checkByRule(CheckPlanTea checkPlanTea, TechnicalDescriptionTea technicalDescriptionTea) {
         if (!checkPlanTea.isMint()){
-            technicalDescriptionTea.getRuleTypeResult().put(RuleType.НАЛИЧИЕ_МЯТЫ,
+            checkPlanTea.getRuleTypeResult().put(RuleType.НАЛИЧИЕ_МЯТЫ,
                     "Кладем мяту");
         }
-        return technicalDescriptionTea;
+        else checkPlanTea.getRuleTypeResult().put(RuleType.НАЛИЧИЕ_МЯТЫ, "Мята уже положена");
+        return checkPlanTea;
     }
 
     @Override

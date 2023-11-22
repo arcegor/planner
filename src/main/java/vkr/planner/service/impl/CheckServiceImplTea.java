@@ -9,6 +9,7 @@ import vkr.planner.exception.UnknownTypeException;
 import vkr.planner.model.CheckRequest;
 import vkr.planner.model.schedule.ObjectType;
 import vkr.planner.model.schedule.Project;
+import vkr.planner.model.schedule.ProjectType;
 import vkr.planner.model.schedule.RuleType;
 import vkr.planner.model.tea.CheckPlanTea;
 import vkr.planner.model.tea.TeaRuleSet;
@@ -55,7 +56,7 @@ public class CheckServiceImplTea implements CheckService<TechnicalDescriptionTea
         ));
         TeaRuleSet teaRuleSet = JsonUtils.parseJsonToObject(checkRequest.getRequestRules(),
                 TeaRuleSet.class);
-
+        project.setProjectType(ProjectType.ЗАВАРИВАНИЕ_ЧАЯ);
         project.setPlan((CheckPlanTea) getCheckPlanBuilder(project).build(teaRuleSet, project));
         project.setTechnicalDescription(convertToModel(stringInputStreamMap.get(TECHNICAL_DESCRIPTION),
                 new TechnicalDescriptionTea()));
@@ -74,12 +75,12 @@ public class CheckServiceImplTea implements CheckService<TechnicalDescriptionTea
     }
     public void implementRules(Project project) throws UnknownTypeException {
         for (RuleType ruleType: project.getPlan().getRuleTypes()){
-             project.setTechnicalDescription((TechnicalDescriptionTea) ruleTypeMapper.getRulesCheckServiceByRuleType(ruleType)
+             project.setPlan((CheckPlanTea) ruleTypeMapper.getRulesCheckServiceByRuleType(ruleType)
                     .checkByRule(project.getPlan(), project.getTechnicalDescription()));
         }
     }
     public String getResult(Project project){
-        return String.join("\n", project.getTechnicalDescription().getRuleTypeResult().values());
+        return String.join("\n", project.getPlan().getRuleTypeResult().values());
     }
 
     @Override

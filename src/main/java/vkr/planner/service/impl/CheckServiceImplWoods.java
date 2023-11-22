@@ -73,7 +73,7 @@ public class CheckServiceImplWoods implements CheckService<TechnicalDescriptionW
         );
     }
     public String getResult(Project project){
-        return String.join("\n", project.getTechnicalDescription().getRuleTypeResult().values());
+        return String.join("\n", project.getPlan().getRuleTypeResult().values());
     }
     public void implementRules(Project project) throws UnknownTypeException {
         for (RuleType ruleType: project.getPlan().getRuleTypes()){

@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class CheckRuleServiceImplArea implements CheckRuleService<CheckPlanWoods, TechnicalDescriptionWoods> {
     public static final RuleType RULE_TYPE = RuleType.AREA;
     @Override
-    public TechnicalDescriptionWoods checkByRule(CheckPlanWoods checkPlanWoods, TechnicalDescriptionWoods technicalDescriptionWoods) {
+    public CheckPlanWoods checkByRule(CheckPlanWoods checkPlanWoods, TechnicalDescriptionWoods technicalDescriptionWoods) {
         StringBuilder stringBuilder = new StringBuilder();
         for (Area area: technicalDescriptionWoods.getAreaList()){
             for (Pipe pipe : area.getPipeList()){
@@ -28,8 +28,8 @@ public class CheckRuleServiceImplArea implements CheckRuleService<CheckPlanWoods
                 );
             }
         }
-        technicalDescriptionWoods.getRuleTypeResult().put(RuleType.AREA, stringBuilder.toString());
-        return technicalDescriptionWoods;
+        checkPlanWoods.getRuleTypeResult().put(RuleType.AREA, stringBuilder.toString());
+        return checkPlanWoods;
     }
 
     @Override

@@ -5,6 +5,6 @@ import vkr.planner.model.schedule.RuleType;
 
 @Service
 public interface CheckRuleService<R, M> {
-    M checkByRule(R r, M m);
+    R checkByRule(R r, M m);
     RuleType getRuleType();
 }
