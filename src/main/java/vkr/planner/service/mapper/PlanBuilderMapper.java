@@ -29,7 +29,7 @@ public class PlanBuilderMapper {
     @PostConstruct
     public void init() {
         projectTypeCheckPlanBuilderMap = checkPlanBuilders.stream()
-                .collect(Collectors.toMap(CheckPlanBuilder::getPlanType, Function.identity()));
+                .collect(Collectors.toMap(CheckPlanBuilder::getProjectType, Function.identity()));
     }
     @NotNull
     public CheckPlanBuilder getCheckPlanBuilderByPlanType(ProjectType projectType) throws UnknownTypeException {

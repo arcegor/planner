@@ -65,8 +65,8 @@ public class CheckServiceImplWoods implements CheckService<TechnicalDescriptionW
         return getResult(project);
     }
     @Override
-    public ObjectType getObjectType() {
-        return ObjectType.РЕАКТОР;
+    public ProjectType getProjectType() {
+        return ProjectType.ГЕРМЕТИЗАЦИЯ_ТРУБЫ;
     }
     @Override
     public TechnicalDescriptionWoods convertToModel(InputStream inputStream, TechnicalDescriptionWoods obj) throws IOException, InvalidFormatException {

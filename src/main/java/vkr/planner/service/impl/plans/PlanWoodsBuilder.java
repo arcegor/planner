@@ -14,7 +14,7 @@ import java.util.ArrayList;
 @Component
 public class PlanWoodsBuilder implements CheckPlanBuilder<CheckPlanWoods, WoodsRuleSet> {
     @Override
-    public ProjectType getPlanType() {
+    public ProjectType getProjectType() {
         return ProjectType.ГЕРМЕТИЗАЦИЯ_ТРУБЫ;
     }
     @Override

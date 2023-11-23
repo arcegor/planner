@@ -12,8 +12,8 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CheckRequest implements Serializable {
 
-    @JsonProperty(value = "requestType")
-    private String objectType;
+    @JsonProperty(value = "projectType")
+    private String projectType;
     @JsonProperty(value = "requestRules")
     private String requestRules;
 
@@ -26,8 +26,8 @@ public class CheckRequest implements Serializable {
     @JsonProperty(value = "result")
     private String result;
 
-    public CheckRequest(String objectType, String requestRules) {
-        this.objectType = objectType;
+    public CheckRequest(String projectType, String requestRules) {
+        this.projectType = projectType;
         this.requestRules = requestRules;
     }
 

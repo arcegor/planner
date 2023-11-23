@@ -14,7 +14,7 @@ import java.util.ArrayList;
 @Component
 public class PlanTeaBuilder implements CheckPlanBuilder<CheckPlanTea, TeaRuleSet> {
     @Override
-    public ProjectType getPlanType() {
+    public ProjectType getProjectType() {
         return ProjectType.ЗАВАРИВАНИЕ_ЧАЯ;
     }
     @Override

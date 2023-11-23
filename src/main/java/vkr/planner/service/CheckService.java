@@ -6,6 +6,7 @@ import vkr.planner.exception.ConvertToDtoException;
 import vkr.planner.exception.UnknownTypeException;
 import vkr.planner.model.CheckRequest;
 import vkr.planner.model.schedule.ObjectType;
+import vkr.planner.model.schedule.ProjectType;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +14,7 @@ import java.io.InputStream;
 @Service
 public interface CheckService<T> {
     String check(CheckRequest checkRequest) throws IOException, InvalidFormatException, ConvertToDtoException, UnknownTypeException;
-    ObjectType getObjectType();
+    ProjectType getProjectType();
     default T convertToModel(InputStream inputStream, T obj) throws IOException, InvalidFormatException {
         return obj;
     }

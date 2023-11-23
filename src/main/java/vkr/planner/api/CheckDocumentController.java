@@ -27,7 +27,7 @@ public class CheckDocumentController {
             @ModelAttribute CheckRequest checkRequest) throws UnknownTypeException {
 
         logger.info(">>> Получен запрос с параметрами {}", checkRequest.toString());
-        if (checkRequest.getRequestFile() == null || checkRequest.getObjectType() == null){
+        if (checkRequest.getRequestFile() == null || checkRequest.getProjectType() == null){
             logger.info(">>> Тело запроса пустое! {}", checkRequest.toString());
             return new ResponseEntity<>(checkRequest.toString(), HttpStatus.BAD_REQUEST);
         }

@@ -6,6 +6,6 @@ import vkr.planner.model.schedule.ProjectType;
 
 @Service
 public interface CheckPlanBuilder<P, R> {
-     ProjectType getPlanType();
+     ProjectType getProjectType();
      P build(R ruleSet, Project project);
 }
