@@ -17,10 +17,9 @@ public class JsonUtils {
         return mapper.readValue(json, clazz);
     }
 
-    public static Set<String> getJsonKeys(String json) throws JsonProcessingException {
+    public static Map<String, Object> getJsonKeys(String json) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        Map<String, Object> jsonElements = mapper.readValue(json, new TypeReference<>() {
+        return mapper.readValue(json, new TypeReference<>() {
         });
-        return jsonElements.keySet();
     }
 }

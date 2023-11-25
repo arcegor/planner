@@ -1,11 +1,7 @@
 package vkr.planner.model.tea;
 
 import lombok.*;
-import vkr.planner.model.schedule.RuleType;
 import vkr.planner.model.schedule.TechnicalDescription;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Setter
 @Getter

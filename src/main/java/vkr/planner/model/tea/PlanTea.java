@@ -7,9 +7,7 @@ import vkr.planner.model.schedule.Plan;
 @Setter
 @Getter
 @NoArgsConstructor
-public class CheckPlanTea extends Plan {
-    private int temp;
-    private boolean isMint;
+public class PlanTea extends Plan {
     public boolean getIsMint(String isMint){
         return isMint.equalsIgnoreCase("да");
     }

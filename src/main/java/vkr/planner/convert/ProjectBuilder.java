@@ -1,26 +1,20 @@
 package vkr.planner.convert;
 
-import com.google.common.collect.ImmutableMap;
-import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.collections4.map.SingletonMap;
 import org.springframework.stereotype.Component;
-import vkr.planner.model.schedule.Project;
+import vkr.planner.model.schedule.RequestProject;
 import vkr.planner.model.schedule.Task;
-import vkr.planner.model.schedule.TaskType;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Component
 @Getter
 @Setter
 public class ProjectBuilder {
 
-    private Map<TaskType, String> cellPatternEnumTypeStringMap;
+    private List<Task> taskSet;
     private Map<Integer, List<String>> excelTable;
 
     public static Integer ID_INDEX = 0;
@@ -31,26 +25,13 @@ public class ProjectBuilder {
     public static Integer IS_BLOCKER_INDEX = 5;
     public static Integer DATE_INDEX = 6;
 
-    @PostConstruct
-    public void init(){
-        this.cellPatternEnumTypeStringMap = ImmutableMap.<TaskType, String>builder()
-                .putAll(Arrays.stream(TaskType.values()).distinct()
-                        .collect(Collectors.toMap(
-                                Function.identity(),
-                                TaskType::getName,
-                                (key1, key2) -> key1,
-                                HashMap::new
-                        )))
-                .build();
-    }
-    private Optional<TaskType> parseCell(String cell){
-        return cellPatternEnumTypeStringMap.entrySet().stream()
+    private Optional<Task> parseCell(String cell){
+        return taskSet.stream()
                 .filter(e -> !cell.trim().isEmpty())
-                .filter(e -> isContainsSubstring(cell, e.getValue()))
-                .map(Map.Entry::getKey)
+                .filter(e -> isContainsSubstring(cell, e.getType()))
                 .findFirst();
     }
-    private Optional<TaskType> parseRow(List<String> row){
+    private Optional<Task> parseRow(List<String> row){
         return row.stream()
                 .map(this::parseCell)
                 .filter(Optional::isPresent)
@@ -61,25 +42,25 @@ public class ProjectBuilder {
         return cell.contains(pattern);
     }
 
-    public Project convertMapToProject(Map<Integer, List<String>> excelTable){
+    public RequestProject convertMapToProject(Map<Integer, List<String>> excelTable){
         this.excelTable = excelTable;
-        Project project = new Project();
+        RequestProject requestProject = new RequestProject();
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         List<Task> taskList = new ArrayList<>();
         try {
             for (Integer key: excelTable.keySet()){
-                Optional<TaskType> cellPatternEnumType = parseRow(excelTable.get(key));
+                Optional<Task> cellPatternEnumType = parseRow(excelTable.get(key));
                 if (cellPatternEnumType.isEmpty())
                     continue;
                 Task task = new Task();
-                task.setTaskType(TaskType.getEnum(excelTable.get(key).get(TASK_INDEX)));
+                task.setType(excelTable.get(key).get(TASK_INDEX));
                 //task.setDate(formatter.parse(excelTable.get(key).get(DATE_INDEX)));
                 taskList.add(task);
             }
-            project.setTaskList(taskList);
+            requestProject.setTaskList(taskList);
         }catch (Exception exception){
             throw new RuntimeException(exception.getMessage());
         }
-        return project;
+        return requestProject;
     }
 }

@@ -2,15 +2,17 @@ package vkr.planner.model.schedule;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Data
 public class Plan {
-    private List<RuleType> ruleTypes;
-    private List<Task> taskList;
-    protected Map<RuleType, String> ruleTypeResult = new HashMap<>();
+    public List<Rule> ruleTypes = new ArrayList<>();
+    public List<Task> taskList = new ArrayList<>();
+    public Map<String, Object> params = new HashMap<>();
+    protected Map<Rule, String> ruleResult = new HashMap<>();
     private boolean isEmpty;
     public void setIsEmpty(Boolean isEmpty) {
         this.isEmpty = isEmpty;

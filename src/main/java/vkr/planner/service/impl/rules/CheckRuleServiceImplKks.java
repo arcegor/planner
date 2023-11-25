@@ -1,28 +1,27 @@
 package vkr.planner.service.impl.rules;
 
 import org.springframework.stereotype.Component;
-import vkr.planner.model.schedule.RuleType;
 import vkr.planner.model.woods.*;
 import vkr.planner.service.CheckRuleService;
 
 import java.util.List;
 
 @Component
-public class CheckRuleServiceImplKks implements CheckRuleService<CheckPlanWoods, TechnicalDescriptionWoods> {
+public class CheckRuleServiceImplKks implements CheckRuleService<PlanWoods, TechnicalDescriptionWoods> {
     public static final RuleType RULE_TYPE = RuleType.KKS;
     @Override
-    public CheckPlanWoods checkByRule(CheckPlanWoods checkPlanWoods, TechnicalDescriptionWoods technicalDescriptionWoods) {
+    public PlanWoods checkByRule(PlanWoods planWoods, TechnicalDescriptionWoods technicalDescriptionWoods) {
 
         List<Pipe> collisionPipeList = technicalDescriptionWoods.getAreaList().stream()
                 .flatMap(area -> area.getPipeList().stream())
                 .filter(pipe ->
-                            checkPlanWoods.getKksToInsulate().contains(pipe.getKks()) && !pipe.isNeedToBeThermallyTnsulated()
-                        ||  !checkPlanWoods.getKksToInsulate().contains(pipe.getKks()) && pipe.isNeedToBeThermallyTnsulated()
+                            planWoods.getKksToInsulate().contains(pipe.getKks()) && !pipe.isNeedToBeThermallyTnsulated()
+                        ||  !planWoods.getKksToInsulate().contains(pipe.getKks()) && pipe.isNeedToBeThermallyTnsulated()
                         )
                 .toList();
-        checkPlanWoods.getRuleTypeResult().put(RuleType.KKS, getResult(collisionPipeList));
+        planWoods.getRuleTypeResult().put(RuleType.KKS, getResult(collisionPipeList));
         collisionPipeList.forEach(pipe -> technicalDescriptionWoods.updatePipe(pipe, fixPipeThermalIsolation(pipe)));
-        return checkPlanWoods;
+        return planWoods;
     }
     @Override
     public RuleType getRuleType() {

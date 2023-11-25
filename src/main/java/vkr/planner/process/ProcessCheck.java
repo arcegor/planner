@@ -2,29 +2,28 @@ package vkr.planner.process;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import vkr.planner.exception.UnknownTypeException;
 import vkr.planner.model.CheckRequest;
-import vkr.planner.model.schedule.ObjectType;
-import vkr.planner.model.schedule.ProjectType;
-import vkr.planner.service.CheckService;
-import vkr.planner.service.mapper.RequestTypeMapper;
+import vkr.planner.service.CheckProjectService;
+import vkr.planner.service.mapper.ProjectTypeMapper;
 
 @Component
 public class ProcessCheck {
     private static final Logger logger = LogManager.getLogger(ProcessCheck.class);
 
-    private final RequestTypeMapper requestTypeMapper;
+    private final ProjectTypeMapper projectTypeMapper;
 
-    public ProcessCheck(RequestTypeMapper requestTypeMapper) {
-        this.requestTypeMapper = requestTypeMapper;
+    public ProcessCheck(ProjectTypeMapper projectTypeMapper) {
+        this.projectTypeMapper = projectTypeMapper;
     }
 
     public void process(CheckRequest checkRequest) throws UnknownTypeException {
-        CheckService checkService = requestTypeMapper.getCheckServiceByRequestType(ProjectType.getEnum(checkRequest.getProjectType()));
+        CheckProjectService checkProjectService = projectTypeMapper.getCheckServiceByProjectType(checkRequest.getProjectType());
         String result;
         try {
-            result = checkService.check(checkRequest);
+            result = checkProjectService.check(checkRequest);
         }
         catch (Exception exception){
             throw new RuntimeException(exception.getMessage());

@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CheckPlanWoods extends Plan {
+public class PlanWoods extends Plan {
     private List<String> kksToInsulate;
     private List<String> neighboringAreasToCheck;
     private Boolean isValidateKksToInsulate;

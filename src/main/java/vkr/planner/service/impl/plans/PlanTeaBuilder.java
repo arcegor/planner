@@ -1,43 +1,37 @@
 package vkr.planner.service.impl.plans;
 
-import org.springframework.stereotype.Component;
-import vkr.planner.model.schedule.Project;
-import vkr.planner.model.schedule.ProjectType;
-import vkr.planner.model.schedule.TaskType;
-import vkr.planner.model.schedule.RuleType;
-import vkr.planner.model.tea.CheckPlanTea;
-import vkr.planner.model.tea.TeaRuleSet;
-import vkr.planner.service.CheckPlanBuilder;
+
+import vkr.planner.model.schedule.RequestProject;
+import vkr.planner.model.schedule.Rule;
+import vkr.planner.model.schedule.Task;
+import vkr.planner.model.tea.PlanTea;
+import vkr.planner.utils.JsonUtils;
 
 import java.util.ArrayList;
-
-@Component
-public class PlanTeaBuilder implements CheckPlanBuilder<CheckPlanTea, TeaRuleSet> {
-    @Override
-    public ProjectType getProjectType() {
-        return ProjectType.ЗАВАРИВАНИЕ_ЧАЯ;
-    }
-    @Override
-    public CheckPlanTea build(TeaRuleSet ruleSet, Project project) {
-        CheckPlanTea checkPlanTea = new CheckPlanTea();
-        checkPlanTea.setRuleTypes(new ArrayList<>()); // Порядок обязателен !!!
+import java.util.List;
+import java.util.Map;
 
 
-        if (project.getTaskByType(TaskType.ВСКИПЯТИТЬ_ВОДУ).isPresent() &&
-            ruleSet.getTemp() != null){
-            int temp = ruleSet.getTemp();
-            checkPlanTea.setTemp(temp);
-            checkPlanTea.getRuleTypes().add(RuleType.ТЕМПЕРАТУРА_ВОДЫ);
+public class PlanTeaBuilder {
+
+    public PlanTea build(Map<String, Object> ruleSet, RequestProject requestProject) {
+        PlanTea planTea = new PlanTea();
+        List<Rule> ruleList = requestProject.getRuleTypes();
+        List<Task> taskList = requestProject.getTaskList();
+        for (Task task: taskList){
+            if (task.getRuleList().isEmpty()) continue;
+            for (Rule rule: task.getRuleList()){
+                if (ruleSet.containsKey(rule.getType()) && ruleList.contains(rule)){
+                    if (!planTea.getRuleTypes().contains(rule)){
+                        planTea.getRuleTypes().add(rule);
+                        planTea.getParams().put(rule.getType(), ruleSet.get(rule.getType()));
+                    }
+                }
+            }
         }
-        if (project.getTaskByType(TaskType.ПОЛОЖИТЬ_МЯТУ).isPresent() &&
-            ruleSet.getIsMint() != null){
-            boolean mint = checkPlanTea.getIsMint(ruleSet.getIsMint());
-            checkPlanTea.setMint(mint);
-            checkPlanTea.getRuleTypes().add(RuleType.НАЛИЧИЕ_МЯТЫ);
-        }
-        if (checkPlanTea.getRuleTypes().isEmpty())
-            checkPlanTea.setIsEmpty(Boolean.TRUE);
-        else checkPlanTea.setIsEmpty(Boolean.FALSE);
-        return checkPlanTea;
+        if (planTea.getRuleTypes().isEmpty())
+            planTea.setIsEmpty(Boolean.TRUE);
+        else planTea.setIsEmpty(Boolean.FALSE);
+        return planTea;
     }
 }
