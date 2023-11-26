@@ -1,35 +1,37 @@
 package vkr.planner.service.impl.rules;
 
 import org.springframework.stereotype.Component;
+import vkr.planner.model.schedule.Plan;
 import vkr.planner.model.woods.*;
 import vkr.planner.service.CheckRuleService;
 
 import java.util.*;
 
 @Component
-public class CheckRuleServiceImplLevel implements CheckRuleService<PlanWoods, TechnicalDescriptionWoods> {
-    public static final RuleType RULE_TYPE = RuleType.LEVEL;
+public class CheckRuleServiceImplLevel implements CheckRuleService<TechnicalDescriptionWoods> {
+    public static final String RULE_TYPE = "Уровень установки лесов";
     @Override
-    public PlanWoods checkByRule(PlanWoods planWoods, TechnicalDescriptionWoods technicalDescriptionWoods) {
+    public Plan checkByRule(Plan plan, TechnicalDescriptionWoods technicalDescriptionWoods) {
         Map<Pipe, Double> woodsLevels =new HashMap<>();
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Проходки, превыщающие высоту ").append(planWoods.getMinHeightOfWoodsToCreate()).append(" :\n");
-        double level = planWoods.getMinHeightOfWoodsToCreate();
+        double level = Double.parseDouble((String) plan.getParams().get(RULE_TYPE));
+        stringBuilder.append("Проходки, превыщающие высоту ").append(level).append(" :\n");
+
         technicalDescriptionWoods.getAreaList().stream()
                 .flatMap(area -> area.getPipeList().stream())
                 .filter(pipe -> Math.abs(pipe.getZ() - pipe.getLevel()) > level)
                 .forEach(pipe ->
                         woodsLevels.put(pipe, round(Math.abs((pipe.getZ() - pipe.getLevel())), 3))
                 );
-        planWoods.getRuleTypeResult().put(RuleType.LEVEL, getResult(woodsLevels, stringBuilder));
-        return planWoods;
+        plan.getRuleResult().put(RULE_TYPE, getResult(woodsLevels, stringBuilder));
+        return plan;
     }
     public static double round(double value, int places) {
         double scale = Math.pow(10, places);
         return Math.round(value * scale) / scale;
     }
     @Override
-    public RuleType getRuleType() {
+    public String getRuleType() {
         return RULE_TYPE;
     }
 

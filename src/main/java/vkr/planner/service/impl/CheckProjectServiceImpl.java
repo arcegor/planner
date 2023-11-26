@@ -4,43 +4,35 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import vkr.planner.convert.PlanBuilder;
 import vkr.planner.convert.ProjectBuilder;
-import vkr.planner.convert.TechnicalDescriptionTeaBuilder;
 import vkr.planner.exception.UnknownTypeException;
 import vkr.planner.model.CheckRequest;
-import vkr.planner.model.schedule.Project;
 import vkr.planner.model.schedule.RequestProject;
 import vkr.planner.model.schedule.Rule;
-import vkr.planner.model.schedule.Task;
-import vkr.planner.model.tea.PlanTea;
-import vkr.planner.model.tea.TechnicalDescriptionTea;
 import vkr.planner.service.CheckProjectService;
-import vkr.planner.service.RuleService;
-import vkr.planner.service.TaskService;
-import vkr.planner.service.impl.plans.PlanTeaBuilder;
+import vkr.planner.service.ProjectService;
 import vkr.planner.service.mapper.RuleTypeMapper;
+import vkr.planner.service.mapper.TechnicalDescriptionMapper;
 import vkr.planner.utils.ExcelUtils;
 import vkr.planner.utils.FileUtils;
 import vkr.planner.utils.JsonUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.Map;
 
 
 @Component
-public class CheckProjectServiceImplTea implements CheckProjectService {
+public class CheckProjectServiceImpl implements CheckProjectService {
     public static final String NO_RULES = "Не передано никаких правил";
-    public static final String PROJECT_TYPE = "Заваривание чая";
+    public static final String UNKNOWN_PROJECT_TYPE = "Неизвестный тип проекта";
     public final ProjectBuilder projectBuilder;
     private final RuleTypeMapper ruleTypeMapper;
-    private final TechnicalDescriptionTeaBuilder technicalDescriptionTeaBuilder;
-    private final PlanTeaBuilder planTeaBuilder;
+    private final TechnicalDescriptionMapper technicalDescriptionMapper;
+    private final PlanBuilder planBuilder;
     @Autowired
-    private RuleService ruleService;
-    @Autowired
-    private TaskService taskService;
+    private ProjectService projectService;
 
     @Value(value = "projectFileName")
     public String projectFileName;
@@ -48,34 +40,40 @@ public class CheckProjectServiceImplTea implements CheckProjectService {
     @Value(value = "technicalDescriptionFileName")
     public String technicalDescriptionFileName;
 
-    public CheckProjectServiceImplTea(ProjectBuilder projectBuilder, RuleTypeMapper ruleTypeMapper, TechnicalDescriptionTeaBuilder technicalDescriptionTeaBuilder, PlanTeaBuilder planTeaBuilder) {
+    public CheckProjectServiceImpl(ProjectBuilder projectBuilder, RuleTypeMapper ruleTypeMapper,
+                                   TechnicalDescriptionMapper technicalDescriptionMapper, PlanBuilder planBuilder) {
         this.projectBuilder = projectBuilder;
         this.ruleTypeMapper = ruleTypeMapper;
-        this.technicalDescriptionTeaBuilder = technicalDescriptionTeaBuilder;
-        this.planTeaBuilder = planTeaBuilder;
+        this.technicalDescriptionMapper = technicalDescriptionMapper;
+        this.planBuilder = planBuilder;
     }
 
     @Override
     public String check(CheckRequest checkRequest) throws IOException, InvalidFormatException, UnknownTypeException {
         Map<String, InputStream> stringInputStreamMap = FileUtils.getInput(checkRequest.getRequestFile());
+        String projectType = checkRequest.getProjectType();
+        if (!projectService.existsProjectByProjectType(projectType))
+            throw new UnknownTypeException(UNKNOWN_PROJECT_TYPE);
 
-        RequestProject requestProject = new RequestProject(PROJECT_TYPE);
+        RequestProject requestProject = (RequestProject) projectService.getProjectByProjectType(projectType);
 
-        List<Rule> ruleList = ruleService.getAllByProject(requestProject);
-        List<Task> taskList = taskService.getAllByProject(requestProject);
-
-        projectBuilder.setTaskSet(taskList);
+        projectBuilder.setTaskSet(requestProject.getTaskList());
 
         requestProject = projectBuilder.convertMapToProject(ExcelUtils.parseExcelFromInputStreamToMap(
                 stringInputStreamMap.get(projectFileName)
         ));
 
-        Map<String, Object> teaRuleSet = JsonUtils.parseJsonToObject(checkRequest.getRequestRules(),
+        Map<String, Object> ruleSet = JsonUtils.parseJsonToObject(checkRequest.getRequestRules(),
                 Map.class);
 
-        requestProject.setRuleTypes(ruleList);
-        requestProject.setPlan(planTeaBuilder.build(teaRuleSet, requestProject));
-        requestProject.setTechnicalDescription(convertToModel(stringInputStreamMap.get(technicalDescriptionFileName)));
+        requestProject.setRuleTypes(requestProject.getRuleTypes());
+
+        requestProject.setPlan(planBuilder.build(ruleSet, requestProject));
+
+        requestProject.setTechnicalDescription(technicalDescriptionMapper.getBuilderByProjectType(projectType)
+                        .convertMapToTechnicalDescription(
+                                ExcelUtils.parseExcelFromInputStreamToMap(stringInputStreamMap
+                                        .get(technicalDescriptionFileName))));
 
         if (requestProject.getPlan().getIsEmpty())
             return NO_RULES;
@@ -84,23 +82,13 @@ public class CheckProjectServiceImplTea implements CheckProjectService {
 
         return getResult(requestProject);
     }
-    public TechnicalDescriptionTea convertToModel(InputStream inputStream) throws IOException, InvalidFormatException {
-        return technicalDescriptionTeaBuilder.convertMapToTechnicalDescriptionTea(
-                ExcelUtils.parseExcelFromInputStreamToMap(inputStream)
-        );
-    }
     public void implementRules(RequestProject requestProject) throws UnknownTypeException {
-        for (Rule rule: requestProject.getPlan().getRuleTypes()){
-             requestProject.setPlan((PlanTea) ruleTypeMapper.getRulesCheckServiceByRuleType(rule.getType())
+        for (Rule rule: requestProject.getPlan().getRuleList()){
+             requestProject.setPlan(ruleTypeMapper.getRulesCheckServiceByRuleType(rule.getType())
                     .checkByRule(requestProject.getPlan(), requestProject.getTechnicalDescription()));
         }
     }
     public String getResult(RequestProject requestProject){
         return String.join("\n", requestProject.getPlan().getRuleResult().values());
     }
-    @Override
-    public String getProjectType() {
-        return PROJECT_TYPE;
-    }
-
 }

@@ -1,25 +1,25 @@
 package vkr.planner.service.impl.rules;
 
 import org.springframework.stereotype.Component;
-import vkr.planner.model.tea.PlanTea;
+import vkr.planner.model.schedule.Plan;
 import vkr.planner.model.tea.TechnicalDescriptionTea;
 import vkr.planner.service.CheckRuleService;
 
 @Component
-public class CheckRuleServiceImplMint implements CheckRuleService<PlanTea, TechnicalDescriptionTea> {
-    public static final RuleType RULE_TYPE = RuleType.НАЛИЧИЕ_МЯТЫ;
+public class CheckRuleServiceImplMint implements CheckRuleService<TechnicalDescriptionTea> {
+    public static final String RULE_TYPE = "Наличие мяты";
     @Override
-    public PlanTea checkByRule(PlanTea planTea, TechnicalDescriptionTea technicalDescriptionTea) {
-        if (!planTea.isMint()){
-            planTea.getRuleTypeResult().put(RuleType.НАЛИЧИЕ_МЯТЫ,
+    public Plan checkByRule(Plan plan, TechnicalDescriptionTea technicalDescriptionTea) {
+        if (plan.getParams().get(RULE_TYPE).equals("Да")){
+            plan.getRuleResult().put(RULE_TYPE,
                     "Кладем мяту");
         }
-        else planTea.getRuleTypeResult().put(RuleType.НАЛИЧИЕ_МЯТЫ, "Мята уже положена");
-        return planTea;
+        else plan.getRuleResult().put(RULE_TYPE, "Мята уже положена");
+        return plan;
     }
 
     @Override
-    public RuleType getRuleType() {
+    public String getRuleType() {
         return RULE_TYPE;
     }
 }

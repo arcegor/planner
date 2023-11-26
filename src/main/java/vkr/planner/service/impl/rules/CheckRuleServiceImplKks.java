@@ -1,30 +1,32 @@
 package vkr.planner.service.impl.rules;
 
 import org.springframework.stereotype.Component;
+import vkr.planner.model.schedule.Plan;
 import vkr.planner.model.woods.*;
 import vkr.planner.service.CheckRuleService;
 
+import java.util.Collection;
 import java.util.List;
 
 @Component
-public class CheckRuleServiceImplKks implements CheckRuleService<PlanWoods, TechnicalDescriptionWoods> {
-    public static final RuleType RULE_TYPE = RuleType.KKS;
+public class CheckRuleServiceImplKks implements CheckRuleService<TechnicalDescriptionWoods> {
+    public static final String RULE_TYPE = "Коллизии в кодах ККС";
     @Override
-    public PlanWoods checkByRule(PlanWoods planWoods, TechnicalDescriptionWoods technicalDescriptionWoods) {
-
+    public Plan checkByRule(Plan plan, TechnicalDescriptionWoods technicalDescriptionWoods) {
+        List<String> kksToInsulate = (List<String>) plan.getParams().get(RULE_TYPE);
         List<Pipe> collisionPipeList = technicalDescriptionWoods.getAreaList().stream()
                 .flatMap(area -> area.getPipeList().stream())
                 .filter(pipe ->
-                            planWoods.getKksToInsulate().contains(pipe.getKks()) && !pipe.isNeedToBeThermallyTnsulated()
-                        ||  !planWoods.getKksToInsulate().contains(pipe.getKks()) && pipe.isNeedToBeThermallyTnsulated()
+                                kksToInsulate.contains(pipe.getKks()) && !pipe.isNeedToBeThermallyTnsulated()
+                        ||  !kksToInsulate.contains(pipe.getKks()) && pipe.isNeedToBeThermallyTnsulated()
                         )
                 .toList();
-        planWoods.getRuleTypeResult().put(RuleType.KKS, getResult(collisionPipeList));
+        plan.getRuleResult().put(RULE_TYPE, getResult(collisionPipeList));
         collisionPipeList.forEach(pipe -> technicalDescriptionWoods.updatePipe(pipe, fixPipeThermalIsolation(pipe)));
-        return planWoods;
+        return plan;
     }
     @Override
-    public RuleType getRuleType() {
+    public String getRuleType() {
         return RULE_TYPE;
     }
 

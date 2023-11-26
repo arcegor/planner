@@ -2,6 +2,7 @@ package vkr.planner.api;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,8 @@ import vkr.planner.exception.UnknownTypeException;
 import vkr.planner.model.CheckRequest;
 import vkr.planner.process.ProcessCheck;
 
+import java.io.IOException;
+
 
 @RestController
 public class CheckDocumentController {
@@ -25,7 +28,7 @@ public class CheckDocumentController {
     @RequestMapping(value = "/request", method = RequestMethod.POST,
             consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<String> checkRequest(
-            @ModelAttribute CheckRequest checkRequest) throws UnknownTypeException {
+            @ModelAttribute CheckRequest checkRequest) {
 
         logger.info(">>> Получен запрос с параметрами {}", checkRequest.toString());
         if (checkRequest.getRequestFile() == null || checkRequest.getProjectType() == null){

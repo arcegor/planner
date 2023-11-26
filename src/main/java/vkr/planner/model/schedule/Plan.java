@@ -9,10 +9,10 @@ import java.util.Map;
 
 @Data
 public class Plan {
-    public List<Rule> ruleTypes = new ArrayList<>();
+    public List<Rule> ruleList = new ArrayList<>();
     public List<Task> taskList = new ArrayList<>();
     public Map<String, Object> params = new HashMap<>();
-    protected Map<Rule, String> ruleResult = new HashMap<>();
+    protected Map<String, String> ruleResult = new HashMap<>();
     private boolean isEmpty;
     public void setIsEmpty(Boolean isEmpty) {
         this.isEmpty = isEmpty;

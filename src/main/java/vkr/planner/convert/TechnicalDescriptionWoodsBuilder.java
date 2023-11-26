@@ -5,6 +5,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
+import vkr.planner.model.schedule.TechnicalDescription;
 import vkr.planner.model.woods.*;
 
 import java.util.*;
@@ -14,7 +15,9 @@ import java.util.regex.Pattern;
 @Component
 @Getter
 @Setter
-public class TechnicalDescriptionWoodsBuilder {
+public class TechnicalDescriptionWoodsBuilder implements TechnicalDescriptionBuilder{
+    public static final String PROJECT_TYPE = "Герметизация труб";
+
     enum CellPatternEnumType{
         ТАБЛИЦА,
         ПЕРЕКРЫТИЕ,
@@ -64,7 +67,8 @@ public class TechnicalDescriptionWoodsBuilder {
                 .map(Optional::get)
                 .findFirst();
     }
-    public TechnicalDescriptionWoods convertMapToTechnicalDescriptionWoods(Map<Integer, List<String>> excelTable){
+    @Override
+    public TechnicalDescription convertMapToTechnicalDescription(Map<Integer, List<String>> excelTable) {
         this.excelTable = excelTable;
         TechnicalDescriptionWoods technicalDescriptionWoods = new TechnicalDescriptionWoods();
         List<Area> areaList = technicalDescriptionWoods.getAreaList();
@@ -99,6 +103,11 @@ public class TechnicalDescriptionWoodsBuilder {
             throw new RuntimeException(exception.getMessage());
         }
         return technicalDescriptionWoods;
+    }
+
+    @Override
+    public String getBuilderType() {
+        return PROJECT_TYPE;
     }
 
     private Area parsePipesInArea(Integer key, Area area){

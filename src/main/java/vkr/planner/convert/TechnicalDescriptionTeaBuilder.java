@@ -3,6 +3,7 @@ package vkr.planner.convert;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
+import vkr.planner.model.schedule.TechnicalDescription;
 import vkr.planner.model.tea.TechnicalDescriptionTea;
 
 import java.util.List;
@@ -11,13 +12,15 @@ import java.util.Map;
 @Component
 @Getter
 @Setter
-public class TechnicalDescriptionTeaBuilder {
+public class TechnicalDescriptionTeaBuilder implements TechnicalDescriptionBuilder{
+    public static final String PROJECT_TYPE = "Заваривание чая";
     private Map<Integer, List<String>> excelTable;
     public static Integer КОЛИЧЕСТВО_МЯТЫ = 0;
     public static Integer ТЕМПЕРАТУРА_ВОДЫ = 1;
     public static Integer ОБЪЕМ_ЧАЙНИКА = 2;
 
-    public TechnicalDescriptionTea convertMapToTechnicalDescriptionTea(Map<Integer, List<String>> excelTable){
+    @Override
+    public TechnicalDescription convertMapToTechnicalDescription(Map<Integer, List<String>> excelTable) {
         TechnicalDescriptionTea technicalDescriptionTea = new TechnicalDescriptionTea();
         this.excelTable = excelTable;
 
@@ -30,6 +33,11 @@ public class TechnicalDescriptionTeaBuilder {
             throw new RuntimeException(exception.getMessage());
         }
         return technicalDescriptionTea;
+    }
+
+    @Override
+    public String getBuilderType() {
+        return PROJECT_TYPE;
     }
 }
 
