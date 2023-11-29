@@ -1,29 +1,28 @@
 package vkr.planner.model.schedule;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
+@Table(name = "projects")
 public class Project {
     @Id
-    @GeneratedValue
-    private Long id;
-    @Column
-    public String projectType;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Long id;
 
-    @OneToMany(mappedBy = "project",
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
-    public List<Task> taskTypes = new ArrayList<>();
+    @Column(unique=true)
+    public String type;
 
-    @OneToMany(mappedBy = "project",
-            fetch = FetchType.LAZY,
+    @OneToMany(mappedBy = "project", orphanRemoval = true,
             cascade = CascadeType.ALL)
-    public List<Rule> ruleTypes = new ArrayList<>();
+    public List<Task> tasks = new ArrayList<>();
 
     @Transient
     public TechnicalDescription technicalDescription;

@@ -42,7 +42,7 @@ public class ProjectBuilder {
         return cell.contains(pattern);
     }
 
-    public RequestProject convertMapToProject(Map<Integer, List<String>> excelTable){
+    public RequestProject build(Map<Integer, List<String>> excelTable){
         this.excelTable = excelTable;
         RequestProject requestProject = new RequestProject();
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
@@ -57,7 +57,7 @@ public class ProjectBuilder {
                 //task.setDate(formatter.parse(excelTable.get(key).get(DATE_INDEX)));
                 taskList.add(task);
             }
-            requestProject.setTaskList(taskList);
+            requestProject.setRequestTasks(taskList);
         }catch (Exception exception){
             throw new RuntimeException(exception.getMessage());
         }

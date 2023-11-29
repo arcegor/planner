@@ -15,22 +15,23 @@ public class PlanBuilder {
 
     public Plan build(Map<String, Object> ruleSet, RequestProject requestProject) {
         Plan plan = new Plan();
-        List<Rule> ruleList = requestProject.getRuleTypes();
-        List<Task> taskList = requestProject.getTaskList();
-        for (Task task: taskList){
-            if (task.getRuleList().isEmpty()) continue;
-            for (Rule rule: task.getRuleList()){
-                if (ruleSet.containsKey(rule.getType()) && ruleList.contains(rule)){
-                    if (!plan.getRuleList().contains(rule)){
-                        plan.getRuleList().add(rule);
-                        plan.getParams().put(rule.getType(), ruleSet.get(rule.getType()));
-                    }
-                }
-            }
-        }
-        if (plan.getRuleList().isEmpty())
+
+        plan.setTaskList(requestProject.getRequestTasks());
+
+        plan.getTaskList().stream()
+                .filter(task -> task.getRules()
+                        .stream()
+                        .anyMatch(rule -> ruleSet.containsKey(rule.getType())))
+                .forEach(task -> task.getRules().removeIf(rule -> !ruleSet.containsKey(rule.getType())));
+
+        plan.getTaskList()
+                .forEach(task -> task.getRules()
+                        .forEach(rule -> plan.getParams().put(rule.getType(), ruleSet.get(rule.getType()))));
+
+        if (plan.getTaskList().isEmpty())
             plan.setIsEmpty(Boolean.TRUE);
         else plan.setIsEmpty(Boolean.FALSE);
+
         return plan;
     }
 }

@@ -2,34 +2,34 @@ package vkr.planner.model.schedule;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.apache.tika.config.Field;
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "tasks")
 public class Task {
     @Id
-    @GeneratedValue
-    private Long id;
-    @Column
-    private String type; // тип задачи
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Long id;
+    @Column(unique=true)
+    private String type;
 
     @ManyToOne
-    @JoinColumn(name="project_id")
-    @JsonIgnore
     private Project project;
 
-    @ManyToMany(mappedBy = "rule")
-    private List<Rule> ruleList = new ArrayList<>();
+    @OneToMany(mappedBy = "task", orphanRemoval = true,
+            cascade = CascadeType.ALL)
+    private List<Rule> rules = new ArrayList<>();
 
     @Transient
     private Duration duration; // номинальная длительность в днях

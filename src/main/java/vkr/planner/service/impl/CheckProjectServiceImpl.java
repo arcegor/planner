@@ -8,8 +8,10 @@ import vkr.planner.convert.PlanBuilder;
 import vkr.planner.convert.ProjectBuilder;
 import vkr.planner.exception.UnknownTypeException;
 import vkr.planner.model.CheckRequest;
+import vkr.planner.model.schedule.Project;
 import vkr.planner.model.schedule.RequestProject;
 import vkr.planner.model.schedule.Rule;
+import vkr.planner.model.schedule.Task;
 import vkr.planner.service.CheckProjectService;
 import vkr.planner.service.ProjectService;
 import vkr.planner.service.mapper.RuleTypeMapper;
@@ -20,7 +22,9 @@ import vkr.planner.utils.JsonUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Component
@@ -34,10 +38,10 @@ public class CheckProjectServiceImpl implements CheckProjectService {
     @Autowired
     private ProjectService projectService;
 
-    @Value(value = "projectFileName")
+    @Value("${projectFileName}")
     public String projectFileName;
 
-    @Value(value = "technicalDescriptionFileName")
+    @Value("${technicalDescriptionFileName}")
     public String technicalDescriptionFileName;
 
     public CheckProjectServiceImpl(ProjectBuilder projectBuilder, RuleTypeMapper ruleTypeMapper,
@@ -52,21 +56,25 @@ public class CheckProjectServiceImpl implements CheckProjectService {
     public String check(CheckRequest checkRequest) throws IOException, InvalidFormatException, UnknownTypeException {
         Map<String, InputStream> stringInputStreamMap = FileUtils.getInput(checkRequest.getRequestFile());
         String projectType = checkRequest.getProjectType();
-        if (!projectService.existsProjectByProjectType(projectType))
-            throw new UnknownTypeException(UNKNOWN_PROJECT_TYPE);
 
-        RequestProject requestProject = (RequestProject) projectService.getProjectByProjectType(projectType);
+        Project project = projectService.getProjectByType(projectType).orElse(null);
 
-        projectBuilder.setTaskSet(requestProject.getTaskList());
+        if (project == null) throw new UnknownTypeException(UNKNOWN_PROJECT_TYPE);
 
-        requestProject = projectBuilder.convertMapToProject(ExcelUtils.parseExcelFromInputStreamToMap(
+        projectBuilder.setTaskSet(project.getTasks());
+
+        RequestProject requestProject = projectBuilder.build(ExcelUtils.parseExcelFromInputStreamToMap(
                 stringInputStreamMap.get(projectFileName)
         ));
 
+        requestProject.setId(project.getId());
+        requestProject.setType(project.getType());
+        requestProject.setRequestTasks(project.getTasks().stream()
+                .filter(requestProject::contains)
+                .toList());
+
         Map<String, Object> ruleSet = JsonUtils.parseJsonToObject(checkRequest.getRequestRules(),
                 Map.class);
-
-        requestProject.setRuleTypes(requestProject.getRuleTypes());
 
         requestProject.setPlan(planBuilder.build(ruleSet, requestProject));
 
@@ -83,7 +91,10 @@ public class CheckProjectServiceImpl implements CheckProjectService {
         return getResult(requestProject);
     }
     public void implementRules(RequestProject requestProject) throws UnknownTypeException {
-        for (Rule rule: requestProject.getPlan().getRuleList()){
+        for (Rule rule: requestProject.getPlan().getTaskList()
+                .stream()
+                .flatMap(task -> task.getRules().stream())
+                .toList()){
              requestProject.setPlan(ruleTypeMapper.getRulesCheckServiceByRuleType(rule.getType())
                     .checkByRule(requestProject.getPlan(), requestProject.getTechnicalDescription()));
         }

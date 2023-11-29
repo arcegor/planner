@@ -9,7 +9,6 @@ import java.util.Map;
 
 @Data
 public class Plan {
-    public List<Rule> ruleList = new ArrayList<>();
     public List<Task> taskList = new ArrayList<>();
     public Map<String, Object> params = new HashMap<>();
     protected Map<String, String> ruleResult = new HashMap<>();

@@ -10,11 +10,12 @@ public class CheckRuleServiceImplMint implements CheckRuleService<TechnicalDescr
     public static final String RULE_TYPE = "Наличие мяты";
     @Override
     public Plan checkByRule(Plan plan, TechnicalDescriptionTea technicalDescriptionTea) {
-        if (plan.getParams().get(RULE_TYPE).equals("Да")){
+        String flag = (String) plan.getParams().get(RULE_TYPE);
+        if (flag.equalsIgnoreCase("Да")){
             plan.getRuleResult().put(RULE_TYPE,
                     "Кладем мяту");
         }
-        else plan.getRuleResult().put(RULE_TYPE, "Мята уже положена");
+        else plan.getRuleResult().put(RULE_TYPE, "Нужно купить мяту");
         return plan;
     }
 
