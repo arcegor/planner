@@ -7,6 +7,7 @@ import vkr.planner.model.schedule.RequestProject;
 import vkr.planner.model.schedule.Rule;
 import vkr.planner.model.schedule.Task;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,13 +17,11 @@ public class PlanBuilder {
     public Plan build(Map<String, Object> ruleSet, RequestProject requestProject) {
         Plan plan = new Plan();
 
-        plan.setTaskList(requestProject.getRequestTasks());
-
-        plan.getTaskList().stream()
+        requestProject.getRequestTasks().stream()
                 .filter(task -> task.getRules()
                         .stream()
                         .anyMatch(rule -> ruleSet.containsKey(rule.getType())))
-                .forEach(task -> task.getRules().removeIf(rule -> !ruleSet.containsKey(rule.getType())));
+                .forEach(task -> plan.getTaskList().add(task));
 
         plan.getTaskList()
                 .forEach(task -> task.getRules()
