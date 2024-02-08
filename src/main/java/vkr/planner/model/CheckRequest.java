@@ -14,9 +14,8 @@ public class CheckRequest implements Serializable {
 
     @JsonProperty(value = "projectType")
     private String projectType;
-    @JsonProperty(value = "requestRules")
-    private String requestRules;
-
+    @JsonProperty(value = "projectCondition")
+    private String projectCondition;
     @JsonProperty(value = "requestFile")
     private MultipartFile[] requestFile;
 
@@ -26,13 +25,13 @@ public class CheckRequest implements Serializable {
     @JsonProperty(value = "result")
     private String result;
 
-    public CheckRequest(String projectType, String requestRules) {
+    public CheckRequest(String projectType, String projectCondition) {
         this.projectType = projectType;
-        this.requestRules = requestRules;
+        this.projectCondition = projectCondition;
     }
 
     public enum ResultType{
-        SUCCESS,
-        FAILED
+        VALID,
+        NOT_VALID
     }
 }

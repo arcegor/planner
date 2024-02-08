@@ -11,7 +11,6 @@ import vkr.planner.model.CheckRequest;
 import vkr.planner.model.schedule.Project;
 import vkr.planner.model.schedule.RequestProject;
 import vkr.planner.model.schedule.Rule;
-import vkr.planner.model.schedule.Task;
 import vkr.planner.service.CheckProjectService;
 import vkr.planner.service.ProjectService;
 import vkr.planner.service.mapper.RuleTypeMapper;
@@ -22,14 +21,12 @@ import vkr.planner.utils.JsonUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 
 @Component
 public class CheckProjectServiceImpl implements CheckProjectService {
-    public static final String NO_RULES = "Не передано никаких правил";
+    public static final String NO_CONDITIONS = "Не передано никаких условий";
     public static final String UNKNOWN_PROJECT_TYPE = "Неизвестный тип проекта";
     public final ProjectBuilder projectBuilder;
     private final RuleTypeMapper ruleTypeMapper;
@@ -37,7 +34,6 @@ public class CheckProjectServiceImpl implements CheckProjectService {
     private final PlanBuilder planBuilder;
     @Autowired
     private ProjectService projectService;
-
     @Value("${projectFileName}")
     public String projectFileName;
 
@@ -73,10 +69,10 @@ public class CheckProjectServiceImpl implements CheckProjectService {
                 .filter(requestProject::contains)
                 .toList());
 
-        Map<String, Object> ruleSet = JsonUtils.parseJsonToObject(checkRequest.getRequestRules(),
+        Map<String, Object> conditionSet = JsonUtils.parseJsonToObject(checkRequest.getProjectCondition(),
                 Map.class);
 
-        requestProject.setPlan(planBuilder.build(ruleSet, requestProject));
+        requestProject.setPlan(planBuilder.build(conditionSet, requestProject));
 
         requestProject.setTechnicalDescription(technicalDescriptionMapper.getBuilderByProjectType(projectType)
                         .convertMapToTechnicalDescription(
@@ -84,7 +80,7 @@ public class CheckProjectServiceImpl implements CheckProjectService {
                                         .get(technicalDescriptionFileName))));
 
         if (requestProject.getPlan().getIsEmpty())
-            return NO_RULES;
+            return NO_CONDITIONS;
 
         implementRules(requestProject);
 

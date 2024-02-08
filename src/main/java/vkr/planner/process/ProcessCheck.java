@@ -26,7 +26,7 @@ public class ProcessCheck {
             throw new RuntimeException(exception.getMessage());
         }
         checkRequest.setResult(result);
-        checkRequest.setResultType(CheckRequest.ResultType.SUCCESS);
+        checkRequest.setResultType(CheckRequest.ResultType.VALID);
         logger.info(">>> Результат проверки для проекта типа {} : \n" +
                 ">>> {}", checkRequest.getProjectType(), result);
     }
