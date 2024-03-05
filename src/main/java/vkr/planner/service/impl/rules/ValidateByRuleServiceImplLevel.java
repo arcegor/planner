@@ -3,18 +3,18 @@ package vkr.planner.service.impl.rules;
 import org.springframework.stereotype.Component;
 import vkr.planner.model.schedule.Plan;
 import vkr.planner.model.woods.*;
-import vkr.planner.service.CheckRuleService;
+import vkr.planner.service.ValidateByRuleService;
 
 import java.util.*;
 
 @Component
-public class CheckRuleServiceImplLevel implements CheckRuleService<TechnicalDescriptionWoods> {
+public class ValidateByRuleServiceImplLevel implements ValidateByRuleService {
     public static final String RULE_TYPE = "Уровень установки лесов";
     @Override
-    public Plan checkByRule(Plan plan, TechnicalDescriptionWoods technicalDescriptionWoods) {
+    public Plan validateByRule(Plan plan) {
         Map<Pipe, Double> woodsLevels =new HashMap<>();
         StringBuilder stringBuilder = new StringBuilder();
-        double level = Double.parseDouble((String) plan.getParams().get(RULE_TYPE));
+        double level = Double.parseDouble((String) plan.getConditionsMap().get(RULE_TYPE));
         stringBuilder.append("Проходки, превыщающие высоту ").append(level).append(" :\n");
 
         technicalDescriptionWoods.getAreaList().stream()

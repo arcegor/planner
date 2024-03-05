@@ -1,15 +1,13 @@
 package vkr.planner.model.schedule;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.poiji.annotation.ExcelCellName;
 import jakarta.persistence.*;
 import lombok.*;
-import org.apache.tika.config.Field;
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -21,16 +19,20 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
+    @ExcelCellName("Задача")
     @Column(unique=true)
     private String type;
-
+    @ExcelCellName("Номер")
+    @Column
+    private int order; // номинальный порядок
     @ManyToOne
     private Project project;
 
     @OneToMany(mappedBy = "task", orphanRemoval = true,
             cascade = CascadeType.ALL)
-    private List<Rule> rules = new ArrayList<>();
+    private List<Condition> conditions = new ArrayList<>();
 
+    @ExcelCellName("Длительность")
     @Transient
     private Duration duration; // номинальная длительность в днях
     @Transient
@@ -40,8 +42,9 @@ public class Task {
     @Transient
     private String result; // результат проверки задачи
 
-    public Task(String type, Date date){
-        this.date = date;
+    public Task(Integer order, String type){
+        this.order = order;
         this.type = type;
     }
+
 }

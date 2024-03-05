@@ -10,12 +10,13 @@ import java.io.Serializable;
 @Data
 @ToString(exclude = "requestFile")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CheckRequest implements Serializable {
+public class Request implements Serializable {
 
     @JsonProperty(value = "projectType")
     private String projectType;
-    @JsonProperty(value = "projectCondition")
-    private String projectCondition;
+    @JsonProperty(value = "projectConditions")
+    private String projectConditions;
+
     @JsonProperty(value = "requestFile")
     private MultipartFile[] requestFile;
 
@@ -25,9 +26,9 @@ public class CheckRequest implements Serializable {
     @JsonProperty(value = "result")
     private String result;
 
-    public CheckRequest(String projectType, String projectCondition) {
+    public Request(String projectType, String projectConditions) {
         this.projectType = projectType;
-        this.projectCondition = projectCondition;
+        this.projectConditions = projectConditions;
     }
 
     public enum ResultType{

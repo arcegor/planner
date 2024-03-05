@@ -3,17 +3,16 @@ package vkr.planner.service.impl.rules;
 import org.springframework.stereotype.Component;
 import vkr.planner.model.schedule.Plan;
 import vkr.planner.model.woods.*;
-import vkr.planner.service.CheckRuleService;
+import vkr.planner.service.ValidateByRuleService;
 
-import java.util.Collection;
 import java.util.List;
 
 @Component
-public class CheckRuleServiceImplKks implements CheckRuleService<TechnicalDescriptionWoods> {
+public class ValidateByRuleServiceImplKks implements ValidateByRuleService {
     public static final String RULE_TYPE = "Коллизии в кодах ККС";
     @Override
-    public Plan checkByRule(Plan plan, TechnicalDescriptionWoods technicalDescriptionWoods) {
-        List<String> kksToInsulate = (List<String>) plan.getParams().get(RULE_TYPE);
+    public Plan validateByRule(Plan plan) {
+        List<String> kksToInsulate = (List<String>) plan.getConditionsMap().get(RULE_TYPE);
         List<Pipe> collisionPipeList = technicalDescriptionWoods.getAreaList().stream()
                 .flatMap(area -> area.getPipeList().stream())
                 .filter(pipe ->

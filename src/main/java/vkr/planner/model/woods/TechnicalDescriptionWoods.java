@@ -4,14 +4,12 @@ package vkr.planner.model.woods;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import vkr.planner.model.schedule.TechnicalDescription;
-
 import java.util.*;
 
 @Setter
 @Getter
 @NoArgsConstructor
-public class TechnicalDescriptionWoods extends TechnicalDescription {
+public class TechnicalDescriptionWoods {
     private List<Area> areaList = new ArrayList<>();
 
     public List<Pipe> getAllPipeList(){

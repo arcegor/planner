@@ -1,11 +1,12 @@
 package vkr.planner.model.schedule;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -23,7 +24,4 @@ public class Project {
     @OneToMany(mappedBy = "project", orphanRemoval = true,
             cascade = CascadeType.ALL)
     public List<Task> tasks = new ArrayList<>();
-
-    @Transient
-    public TechnicalDescription technicalDescription;
 }

@@ -12,12 +12,12 @@ public class RequestProject extends Project{ // Проект
     public RequestProject(){
         super();
     }
-    public Plan plan; // План проверок по проекту
-    public List<Task> requestTasks; // Набор задач для данного проекта
-    public boolean isValid; // Валидность проекта
 
+    public Plan plan = new Plan(); // План проверок по проекту
+
+    public boolean isValid; // Валидность проекта
     public boolean contains(Task task){
-        return requestTasks.stream()
+        return plan.getTasks().stream()
                 .anyMatch(t -> t.getType().equals(task.getType()));
     }
 }

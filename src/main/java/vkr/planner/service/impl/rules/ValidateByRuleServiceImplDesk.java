@@ -3,14 +3,14 @@ package vkr.planner.service.impl.rules;
 import org.springframework.stereotype.Component;
 import vkr.planner.model.desk.TechnicalDescriptionDesk;
 import vkr.planner.model.schedule.Plan;
-import vkr.planner.service.CheckRuleService;
+import vkr.planner.service.ValidateByRuleService;
 
 @Component
-public class CheckRulesServiceImplDesk implements CheckRuleService<TechnicalDescriptionDesk> {
+public class ValidateByRuleServiceImplDesk implements ValidateByRuleService {
     public static final String RULE_TYPE = "Температура утюга";
     @Override
-    public Plan checkByRule(Plan plan, TechnicalDescriptionDesk technicalDescriptionDesk) {
-        if (technicalDescriptionDesk.getTemp() > (int)plan.getParams().get(RULE_TYPE)){
+    public Plan validateByRule(Plan plan) {
+        if (technicalDescriptionDesk.getTemp() > (int)plan.getConditionsMap().get(RULE_TYPE)){
             plan.getRuleResult().put(RULE_TYPE,
                     "Нагреваем утюг до 110 градусов");
         }
