@@ -25,7 +25,7 @@ public class CheckDocumentController {
     private ValidateService validateService;
     @RequestMapping(value = "/request", method = RequestMethod.POST,
             consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<String> checkRequest(
+    public ResponseEntity<String> validateRequest(
             @ModelAttribute Request request) throws UnknownTypeException, IOException, InvalidFormatException {
 
         logger.info(">>> Получен запрос с параметрами {}", request.toString());
@@ -33,6 +33,7 @@ public class CheckDocumentController {
             logger.info(">>> Тело запроса пустое! {}", request.toString());
             return new ResponseEntity<>(request.toString(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(validateService.validateProject(request), HttpStatus.OK);
+        return new ResponseEntity<>(validateService.validateProject(request).getValidationResult()
+                .toString(), HttpStatus.OK);
     }
 }

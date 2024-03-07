@@ -1,4 +1,4 @@
-package vkr.planner.model.schedule;
+package vkr.planner.model.db;
 
 import com.poiji.annotation.ExcelCellName;
 import jakarta.persistence.*;
@@ -16,15 +16,19 @@ import java.util.List;
 @Entity
 @Table(name = "tasks")
 public class Task {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
+
     @ExcelCellName("Задача")
     @Column(unique=true)
     private String type;
+
     @ExcelCellName("Номер")
     @Column
     private int order; // номинальный порядок
+
     @ManyToOne
     private Project project;
 
@@ -35,10 +39,13 @@ public class Task {
     @ExcelCellName("Длительность")
     @Transient
     private Duration duration; // номинальная длительность в днях
+
     @Transient
     private Date date; // Дата
+
     @Transient
     private int costs; // издержки/затраты
+
     @Transient
     private String result; // результат проверки задачи
 

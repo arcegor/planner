@@ -1,4 +1,4 @@
-package vkr.planner.model.schedule;
+package vkr.planner.model.db;
 
 import jakarta.persistence.*;
 import lombok.Getter;

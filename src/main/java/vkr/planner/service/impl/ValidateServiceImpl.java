@@ -8,11 +8,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import vkr.planner.convert.PlanBuilder;
 import vkr.planner.exception.UnknownTypeException;
+import vkr.planner.model.Plan;
 import vkr.planner.model.Request;
-import vkr.planner.model.schedule.*;
+import vkr.planner.model.RequestProject;
+import vkr.planner.model.db.*;
 import vkr.planner.service.ValidateService;
-import vkr.planner.service.ProjectService;
-import vkr.planner.service.mapper.RuleTypeMapper;
+import vkr.planner.repository.ProjectRepository;
+import vkr.planner.mapper.RuleTypeMapper;
 import vkr.planner.utils.ExcelUtils;
 import vkr.planner.utils.FileUtils;
 
@@ -25,11 +27,10 @@ import java.util.stream.Collectors;
 
 @Component
 public class ValidateServiceImpl implements ValidateService {
-    public static final String NO_CONDITIONS = "Не передано никаких условий";
     public static final String UNKNOWN_PROJECT_TYPE = "Неизвестный тип проекта";
     private final RuleTypeMapper ruleTypeMapper;
     private final PlanBuilder planBuilder;
-    private final ProjectService projectService;
+    private final ProjectRepository projectRepository;
     @Value("${project.file.name}")
     public String projectFileName;
     @Value("${technical.conditions.file.name}")
@@ -37,20 +38,29 @@ public class ValidateServiceImpl implements ValidateService {
 
     public ValidateServiceImpl(RuleTypeMapper ruleTypeMapper,
                                PlanBuilder planBuilder,
-                               ProjectService projectService) {
+                               ProjectRepository projectRepository) {
         this.ruleTypeMapper = ruleTypeMapper;
         this.planBuilder = planBuilder;
-        this.projectService = projectService;
+        this.projectRepository = projectRepository;
     }
 
     @Override
-    public String validateProject(Request request) throws IOException, InvalidFormatException, UnknownTypeException {
+    public RequestProject validateProject(Request request) throws IOException, InvalidFormatException, UnknownTypeException {
+
+        RequestProject requestProject = preprocessRequest(request);
+
+        implementRules(requestProject);
+
+        return requestProject;
+    }
+
+    public RequestProject preprocessRequest(Request request) throws IOException, UnknownTypeException, InvalidFormatException {
 
         Map<String, InputStream> inputStreamMap = FileUtils.getInput(request.getRequestFile());
 
         String projectType = request.getProjectType();
 
-        Project project = projectService.getProjectByType(projectType).orElse(null);
+        Project project = projectRepository.getProjectByType(projectType).orElse(null);
 
         if (project == null) throw new UnknownTypeException(UNKNOWN_PROJECT_TYPE);
 
@@ -67,26 +77,16 @@ public class ValidateServiceImpl implements ValidateService {
         requestProject.setId(project.getId());
         requestProject.setType(project.getType());
         requestProject.setTasks(project.getTasks());
-
-        if (requestProject.getPlan().getIsEmpty())
-            return NO_CONDITIONS;
-
-        implementRules(requestProject);
-        Graph<String, DefaultEdge> graph = new SimpleGraph<>(DefaultEdge.class);
-        return getResult(requestProject);
+        return requestProject;
     }
     public void implementRules(RequestProject requestProject) throws UnknownTypeException {
         for (Condition condition : requestProject.getPlan().getTasks()
                 .stream()
                 .flatMap(task -> task.getConditions().stream())
                 .toList()){
-             requestProject.setPlan(ruleTypeMapper.getRulesCheckServiceByRuleType(condition.getType())
+             requestProject.setPlan(ruleTypeMapper.getRulesCheckServiceByRuleType(
+                     condition.getType())
                     .validateByRule(requestProject.getPlan()));
         }
-    }
-    public String getResult(RequestProject requestProject){
-        return requestProject.getPlan().getConditions().stream()
-                .map(Condition::getResult)
-                .collect(Collectors.joining("\n"));
     }
 }

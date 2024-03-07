@@ -1,11 +1,10 @@
-package vkr.planner.model.schedule;
+package vkr.planner.model.db;
 
 import com.poiji.annotation.ExcelCellName;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Getter
 @Setter
@@ -18,6 +17,7 @@ public class Condition {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
+
     @ExcelCellName("Условие")
     @Column(unique=true)
     private String type;
@@ -31,7 +31,7 @@ public class Condition {
     private String value;
 
     @Transient
-    private String result;
+    private Boolean result;
     public Condition(String type, String value){
         this.type = type;
         this.value = value;
@@ -41,5 +41,8 @@ public class Condition {
                 .filter(condition -> condition.getType().equals(type))
                 .findFirst()
                 .orElse(null);
+    }
+    public boolean isConditionIncludingByTask(Task task){
+        return this.task.getType().equals(task.getType());
     }
 }

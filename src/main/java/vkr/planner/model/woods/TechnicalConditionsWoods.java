@@ -9,7 +9,8 @@ import java.util.*;
 @Setter
 @Getter
 @NoArgsConstructor
-public class TechnicalDescriptionWoods {
+public class TechnicalConditionsWoods {
+
     private List<Area> areaList = new ArrayList<>();
 
     public List<Pipe> getAllPipeList(){

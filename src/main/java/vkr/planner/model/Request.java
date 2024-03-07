@@ -14,25 +14,11 @@ public class Request implements Serializable {
 
     @JsonProperty(value = "projectType")
     private String projectType;
-    @JsonProperty(value = "projectConditions")
-    private String projectConditions;
 
     @JsonProperty(value = "requestFile")
     private MultipartFile[] requestFile;
 
-    @JsonProperty(value = "resultType")
-    private ResultType resultType;
-
-    @JsonProperty(value = "result")
-    private String result;
-
-    public Request(String projectType, String projectConditions) {
+    public Request(String projectType) {
         this.projectType = projectType;
-        this.projectConditions = projectConditions;
-    }
-
-    public enum ResultType{
-        VALID,
-        NOT_VALID
     }
 }

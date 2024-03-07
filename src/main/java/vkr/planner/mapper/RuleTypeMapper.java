@@ -1,4 +1,4 @@
-package vkr.planner.service.mapper;
+package vkr.planner.mapper;
 
 import jakarta.annotation.PostConstruct;
 import org.jetbrains.annotations.NotNull;

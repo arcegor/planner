@@ -1,20 +1,19 @@
-package vkr.planner.model.schedule;
+package vkr.planner.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import vkr.planner.model.db.Condition;
+import vkr.planner.model.db.Task;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Data
 @NoArgsConstructor
 public class Plan {
 
-    public List<Task> tasks = new ArrayList<>();
+    public List<Task> tasks;
 
-    public List<Condition> conditions = new ArrayList<>();
     private boolean isEmpty;
     public void setIsEmpty(Boolean isEmpty) {
         this.isEmpty = isEmpty;
