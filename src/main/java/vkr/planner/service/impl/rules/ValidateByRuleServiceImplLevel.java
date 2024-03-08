@@ -11,7 +11,7 @@
 //public class ValidateByRuleServiceImplLevel implements ValidateByRuleService {
 //    public static final String RULE_TYPE = "Уровень установки лесов";
 //    @Override
-//    public Plan validateByRule(Plan plan) {
+//    public Plan applyRule(Plan plan) {
 //        Map<Pipe, Double> woodsLevels =new HashMap<>();
 //        StringBuilder stringBuilder = new StringBuilder();
 //        double level = Double.parseDouble((String) plan.getConditionsMap().get(RULE_TYPE));

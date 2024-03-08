@@ -13,16 +13,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import vkr.planner.exception.UnknownTypeException;
 import vkr.planner.model.Request;
-import vkr.planner.service.ValidateService;
+import vkr.planner.service.ValidationService;
 
 import java.io.IOException;
 
 
 @RestController
-public class CheckDocumentController {
-    private static final Logger logger = LogManager.getLogger(CheckDocumentController.class);
-
-    private ValidateService validateService;
+public class MainController {
+    private static final Logger logger = LogManager.getLogger(MainController.class);
+    @Autowired
+    private ValidationService validationService;
     @RequestMapping(value = "/request", method = RequestMethod.POST,
             consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<String> validateRequest(
@@ -33,7 +33,13 @@ public class CheckDocumentController {
             logger.info(">>> Тело запроса пустое! {}", request.toString());
             return new ResponseEntity<>(request.toString(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(validateService.validateProject(request).getValidationResult()
-                .toString(), HttpStatus.OK);
+        try {
+            String result = validationService.validateProject(request).getValidationResult()
+                    .toString();
+        }
+        catch (Exception exception){
+            logger.error(exception.getMessage());
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

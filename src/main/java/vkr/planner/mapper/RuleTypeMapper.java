@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vkr.planner.exception.UnknownTypeException;
-import vkr.planner.service.ValidateByRuleService;
+import vkr.planner.service.RuleService;
 
 import java.util.List;
 import java.util.Map;
@@ -16,19 +16,19 @@ import java.util.stream.Collectors;
 public class RuleTypeMapper {
     public static final String UNKNOWN_TYPE_MESSAGE = "Неизвестное правило!";
     @Autowired
-    private final List<ValidateByRuleService> validateByRuleServices;
-    private Map<String, ValidateByRuleService> rulesMappingRulesCheckService;
+    private final List<RuleService> ruleServices;
+    private Map<String, RuleService> rulesMappingRulesCheckService;
 
-    public RuleTypeMapper(List<ValidateByRuleService> validateByRuleServices) {
-        this.validateByRuleServices = validateByRuleServices;
+    public RuleTypeMapper(List<RuleService> ruleServices) {
+        this.ruleServices = ruleServices;
     }
     @PostConstruct
     public void init() {
-        rulesMappingRulesCheckService = validateByRuleServices.stream()
-                .collect(Collectors.toMap(ValidateByRuleService::getRuleType, Function.identity()));
+        rulesMappingRulesCheckService = ruleServices.stream()
+                .collect(Collectors.toMap(RuleService::getRuleType, Function.identity()));
     }
     @NotNull
-    public ValidateByRuleService getRulesCheckServiceByRuleType(String ruleType) throws UnknownTypeException {
+    public RuleService getRulesCheckServiceByRuleType(String ruleType) throws UnknownTypeException {
         return Optional.ofNullable(rulesMappingRulesCheckService.get(ruleType)).orElseThrow(() ->
                 new UnknownTypeException(UNKNOWN_TYPE_MESSAGE));
     }

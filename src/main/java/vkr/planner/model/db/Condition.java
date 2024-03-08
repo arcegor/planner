@@ -24,14 +24,19 @@ public class Condition {
 
     @ManyToOne
     private Task task;
+
     @Column
     private String description;
+
     @ExcelCellName("Значение")
     @Transient
     private String value;
 
     @Transient
     private Boolean result;
+
+    @Transient
+    private Boolean isPresentByPlan; // Есть ли условие в проверяемом плане
     public Condition(String type, String value){
         this.type = type;
         this.value = value;

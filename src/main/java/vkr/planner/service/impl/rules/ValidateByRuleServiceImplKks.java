@@ -11,7 +11,7 @@
 //public class ValidateByRuleServiceImplKks implements ValidateByRuleService {
 //    public static final String RULE_TYPE = "Коллизии в кодах ККС";
 //    @Override
-//    public Plan validateByRule(Plan plan) {
+//    public Plan applyRule(Plan plan) {
 //        List<String> kksToInsulate = (List<String>) plan.getConditionsMap().get(RULE_TYPE);
 //        List<Pipe> collisionPipeList = technicalDescriptionWoods.getAreaList().stream()
 //                .flatMap(area -> area.getPipeList().stream())
