@@ -9,8 +9,7 @@ import vkr.planner.service.RuleService;
 public class RuleServiceImplDesk implements RuleService {
     public static final String RULE_TYPE = "Температура утюга";
     @Override
-    public Plan applyRule(Plan plan, Condition condition) {
-        return plan;
+    public void applyRule(Plan plan, Condition condition) {
     }
     @Override
     public String getRuleType() {

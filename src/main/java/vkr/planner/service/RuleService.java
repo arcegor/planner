@@ -6,6 +6,6 @@ import vkr.planner.model.db.Condition;
 
 @Service
 public interface RuleService {
-    Plan applyRule(Plan plan, Condition condition);
+    void applyRule(Plan plan, Condition condition);
     String getRuleType();
 }

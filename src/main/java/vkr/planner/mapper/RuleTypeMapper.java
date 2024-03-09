@@ -28,7 +28,7 @@ public class RuleTypeMapper {
                 .collect(Collectors.toMap(RuleService::getRuleType, Function.identity()));
     }
     @NotNull
-    public RuleService getRulesCheckServiceByRuleType(String ruleType) throws UnknownTypeException {
+    public RuleService getRuleServiceByRuleType(String ruleType) throws UnknownTypeException {
         return Optional.ofNullable(rulesMappingRulesCheckService.get(ruleType)).orElseThrow(() ->
                 new UnknownTypeException(UNKNOWN_TYPE_MESSAGE));
     }

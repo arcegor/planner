@@ -3,7 +3,6 @@ package vkr.planner.model.db;
 import com.poiji.annotation.ExcelCellName;
 import jakarta.persistence.*;
 import lombok.*;
-import org.apache.poi.ss.formula.functions.T;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -25,9 +24,12 @@ public class Task {
     @Column(unique=true)
     private String type;
 
-    @ExcelCellName("Номер")
     @Column
     private int order; // номинальный порядок
+
+    @ExcelCellName("Номер")
+    @Transient
+    private int orderByPlan; // Порядок в рамках плана
 
     @ManyToOne
     private Project project;
@@ -47,10 +49,16 @@ public class Task {
     private int costs; // издержки/затраты
 
     @Transient
-    private Boolean isPresentByPlan; // Есть ли задача в проверяемом плане
+    private Boolean presentedByPlan = false; // Есть ли задача в проверяемом плане
 
     @Transient
-    private String result; // результат проверки задачи
+    private String status; // статус задачи в плане
+
+    @Transient
+    private boolean providedByRule = false; // Обеспечивает ли переданное условие выполнение задачи
+
+    @Transient
+    private boolean completable; // Основная функция задачи
 
     public Task(Integer order, String type){
         this.order = order;
@@ -60,5 +68,14 @@ public class Task {
         return tasks.stream()
                 .map(Task::getType)
                 .anyMatch(type -> this.getType().equals(type));
+    }
+    @Override
+    public boolean equals(Object task){
+        if (this == task)
+            return true;
+        if (task == null || task.getClass() != this.getClass()) {
+            return false;
+        }
+        return this.getType().equals(((Task) task).getType());
     }
 }

@@ -9,8 +9,7 @@ import vkr.planner.service.RuleService;
 public class RuleServiceImplMint implements RuleService {
     public static final String RULE_TYPE = "Наличие мяты";
     @Override
-    public Plan applyRule(Plan plan, Condition condition) {
-        return plan;
+    public void applyRule(Plan plan, Condition condition) {
     }
     @Override
     public String getRuleType() {

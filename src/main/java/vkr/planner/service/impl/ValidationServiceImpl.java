@@ -37,9 +37,7 @@ public class ValidationServiceImpl implements ValidationService {
 
         Plan plan = preprocessRequest(request);
 
-        implementRules(plan);
-
-        return plan;
+        return validatePlan(plan);
     }
 
     public Plan preprocessRequest(Request request) throws IOException, UnknownTypeException, InvalidFormatException {
@@ -57,27 +55,81 @@ public class ValidationServiceImpl implements ValidationService {
         plan.setId(project.getId());
         plan.setType(project.getType());
         plan.setTasks(project.getTasks());
+
         plan.setProvidedTasks(ExcelUtils.getObjectsListFromExcelFile(
                 inputStreamMap.get(projectFileName), Task.class));
+
         plan.setProvidedConditions(ExcelUtils.getObjectsListFromExcelFile(
                 inputStreamMap.get(technicalConditionsFileName), Condition.class));
-        checkPresentedTasksAndConditionsInPlan(plan);
+
+        checkPresentedTasksInPlan(plan);
+
+        implementRules(plan);
 
         return plan;
     }
     public void implementRules(Plan plan) throws UnknownTypeException {
         for (Condition condition : plan.getPlanConditions()){
-             ruleTypeMapper.getRulesCheckServiceByRuleType(
+             ruleTypeMapper.getRuleServiceByRuleType(
                      condition.getType())
                     .applyRule(plan, condition);
         }
     }
-    public void checkPresentedTasksAndConditionsInPlan(Plan plan){
+    public void checkPresentedTasksInPlan(Plan plan){
         for (Task task: plan.getTasks()){
-            task.setIsPresentByPlan(task.containsInTasks(plan.getProvidedTasks()));
-            for (Condition condition: task.getConditions()){
-                condition.setIsPresentByPlan(plan.isConditionIncludedByPlan(condition));
+            int index = plan.indexOfTaskInPlan(task);
+            if (index != -1){
+                task.setPresentedByPlan(true);
             }
+            task.setOrderByPlan(index);
         }
+    }
+    public void validateTasks(Plan plan){
+        for (Task task: plan.getTasks()){
+            int orderByProject = task.getOrder();
+            int orderByPlan = task.getOrderByPlan();
+            boolean providedByRule = task.isProvidedByRule();
+            boolean presentedByPlan = task.getPresentedByPlan();
+
+            if (orderByPlan > orderByProject){
+                task.setCompletable(false);
+                String res = String.format("Ошибка валидации! Порядок задачи %s по плану больше номинального!", task.getType());
+                plan.getValidationResult().add(
+                        new Plan.ValidationResult(Plan.ResultType.NOT_VALID, res)
+                );
+            }
+
+            if (!presentedByPlan || !providedByRule){
+                task.setCompletable(false);
+                String res = String.format("Ошибка валидации! Задача %s отсутствует!", task.getType());
+
+                plan.getValidationResult().add(
+                        new Plan.ValidationResult(Plan.ResultType.NOT_VALID, res)
+                );
+            }
+            task.setCompletable(true);
+        }
+    }
+    public Plan validatePlan(Plan plan){
+
+        validateTasks(plan);
+
+        boolean result = plan.getTasks()
+                .stream()
+                .anyMatch(task -> !task.isCompletable());
+
+        if (!result)
+            plan.getValidationResult().add(
+                    new Plan.ValidationResult(
+                            Plan.ResultType.VALID, "План валиден!"
+                    )
+            );
+        else
+            plan.getValidationResult().add(
+                    new Plan.ValidationResult(
+                            Plan.ResultType.NOT_VALID, "План невалиден!"
+                    )
+            );
+        return plan;
     }
 }
