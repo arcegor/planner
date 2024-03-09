@@ -85,11 +85,18 @@ public class ValidationServiceImpl implements ValidationService {
         }
     }
     public void validateTasks(Plan plan){
+
+        int shift = 0;
+
         for (Task task: plan.getTasks()){
             int orderByProject = task.getOrder();
             int orderByPlan = task.getOrderByPlan();
             boolean providedByRule = task.isProvidedByRule();
             boolean presentedByPlan = task.getPresentedByPlan();
+
+            if (orderByPlan == -1)
+                shift = shift + 1;
+            else orderByPlan = orderByPlan + shift;
 
             if (orderByPlan > orderByProject){
                 task.setCompletable(false);
