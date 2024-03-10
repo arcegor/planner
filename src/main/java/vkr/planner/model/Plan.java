@@ -58,7 +58,8 @@ public class Plan extends Project { // Проект
     }
     public enum ResultType{
         VALID,
-        NOT_VALID
+        NOT_VALID,
+        STATUS
     }
     public Task getTaskByCondition(Condition condition){
         for (Task task: this.getTasks()){
@@ -75,5 +76,15 @@ public class Plan extends Project { // Проект
                 return t.getOrderByPlan();
         }
         return -1;
+    }
+
+    public boolean validateProvidedTasks(){
+        for (Task task: this.getProvidedTasks()){
+            for (Task task1: this.getTasks()){
+                if (task1.getType().equals(task.getType()))
+                    return true;
+            }
+        }
+        return false;
     }
 }
