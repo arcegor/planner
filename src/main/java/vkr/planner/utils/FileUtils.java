@@ -20,11 +20,10 @@ public class FileUtils {
                 return ZipUtils.unzip(files[0].getBytes());
             }
         }
-        if (files.length != 0){ // Если excel по отдельности
-            for (MultipartFile multipartFile : files){
-                stringInputStreamMap.put(Objects.requireNonNull(multipartFile.getOriginalFilename()).split("\\.")[0],
-                        multipartFile.getInputStream());
-            }
+        // Если excel по отдельности
+        for (MultipartFile multipartFile : files){
+            stringInputStreamMap.put(Objects.requireNonNull(multipartFile.getOriginalFilename()).split("\\.")[0],
+                    multipartFile.getInputStream());
         }
         return stringInputStreamMap;
     }

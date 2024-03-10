@@ -23,6 +23,8 @@ import java.util.Map;
 @Component
 public class ValidationServiceImpl implements ValidationService {
     public static final String UNKNOWN_PROJECT_TYPE = "Неизвестный тип проекта";
+    public static final String UNKNOWN_CONDITION_TYPE = "Передано неизвестное условие!";
+    public static final String UNKNOWN_TASK_TYPE = "Передана неизвестная задача!";
     @Autowired
     private final RuleTypeMapper ruleTypeMapper;
     @Autowired
@@ -60,12 +62,19 @@ public class ValidationServiceImpl implements ValidationService {
         plan.setId(project.getId());
         plan.setType(project.getType());
         plan.setTasks(project.getTasks());
+        plan.setConditions(project.getConditions());
 
         plan.setProvidedTasks(ExcelUtils.getObjectsListFromExcelFile(
                 inputStreamMap.get(projectFileName), Task.class));
 
         plan.setProvidedConditions(ExcelUtils.getObjectsListFromExcelFile(
                 inputStreamMap.get(technicalConditionsFileName), Condition.class));
+
+        if (!plan.validateProvidedTasks())
+            throw new UnknownTypeException(UNKNOWN_TASK_TYPE);
+
+        if (!plan.validateProvidedConditions())
+            throw new UnknownTypeException(UNKNOWN_CONDITION_TYPE);
 
         checkPresentedTasksInPlan(plan);
 
@@ -121,6 +130,8 @@ public class ValidationServiceImpl implements ValidationService {
                         new Plan.ValidationResult(Plan.ResultType.NOT_VALID, res)
                 );
             }
+            if (task.getStatus() != null)
+                plan.getValidationResult().add(new Plan.ValidationResult(Plan.ResultType.STATUS, task.getStatus()));
         }
     }
     public Plan validatePlan(Plan plan){

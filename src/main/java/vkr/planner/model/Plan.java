@@ -58,16 +58,8 @@ public class Plan extends Project { // Проект
     }
     public enum ResultType{
         VALID,
-        NOT_VALID
-    }
-    public Task getTaskByCondition(Condition condition){
-        for (Task task: this.getTasks()){
-            if (task.getConditions().stream()
-                    .map(Condition::getType)
-                    .anyMatch(a -> a.equals(condition.getType())))
-                return task;
-        }
-        return null;
+        NOT_VALID,
+        STATUS
     }
     public int indexOfTaskInPlan(Task task){
         for (Task t: this.getProvidedTasks()){
@@ -75,5 +67,29 @@ public class Plan extends Project { // Проект
                 return t.getOrderByPlan();
         }
         return -1;
+    }
+    public Task getTaskByType(String type){
+        return this.getTasks().stream()
+                .filter(task -> task.getType().equals(type))
+                .findFirst()
+                .orElse(null);
+    }
+    public boolean validateProvidedConditions(){
+        for (Condition condition: this.getProvidedConditions()){
+            for (Condition condition1: this.getConditions()){
+                if (condition1.getType().equals(condition.getType()))
+                    return true;
+            }
+        }
+        return false;
+    }
+    public boolean validateProvidedTasks(){
+        for (Task task: this.getProvidedTasks()){
+            for (Task task1: this.getTasks()){
+                if (task1.getType().equals(task.getType()))
+                    return true;
+            }
+        }
+        return false;
     }
 }

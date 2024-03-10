@@ -34,10 +34,6 @@ public class Task {
     @ManyToOne
     private Project project;
 
-    @OneToMany(mappedBy = "task", orphanRemoval = true,
-            cascade = CascadeType.ALL)
-    private List<Condition> conditions = new ArrayList<>();
-
     @ExcelCellName("Длительность")
     @Transient
     private Duration duration; // номинальная длительность в днях

@@ -24,4 +24,8 @@ public class Project {
     @OneToMany(mappedBy = "project", orphanRemoval = true,
             cascade = CascadeType.ALL)
     public List<Task> tasks = new ArrayList<>();
+
+    @OneToMany(mappedBy = "project", orphanRemoval = true,
+            cascade = CascadeType.ALL)
+    private List<Condition> conditions = new ArrayList<>();
 }

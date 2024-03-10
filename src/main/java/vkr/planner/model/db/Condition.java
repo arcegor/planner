@@ -23,7 +23,7 @@ public class Condition {
     private String type;
 
     @ManyToOne
-    private Task task;
+    private Project project;
 
     @Column
     private String description;
@@ -40,14 +40,5 @@ public class Condition {
     public Condition(String type, String value){
         this.type = type;
         this.value = value;
-    }
-    public Condition getConditionByType(List<Condition> conditions, String type){
-        return conditions.stream()
-                .filter(condition -> condition.getType().equals(type))
-                .findFirst()
-                .orElse(null);
-    }
-    public boolean isConditionIncludingByTask(Task task){
-        return this.task.getType().equals(task.getType());
     }
 }
