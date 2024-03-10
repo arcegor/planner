@@ -33,13 +33,7 @@ public class MainController {
             logger.info(">>> Тело запроса пустое! {}", request.toString());
             return new ResponseEntity<>(request.toString(), HttpStatus.BAD_REQUEST);
         }
-        try {
-            String result = validationService.validateProject(request).getValidationResult()
-                    .toString();
-        }
-        catch (Exception exception){
-            logger.error(exception.getMessage());
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
+        String result = validationService.validateProject(request).getResult();
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

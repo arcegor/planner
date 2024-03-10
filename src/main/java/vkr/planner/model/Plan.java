@@ -9,6 +9,7 @@ import vkr.planner.model.db.Task;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Setter
@@ -31,6 +32,12 @@ public class Plan extends Project { // Проект
     }
 
     public List<ValidationResult> validationResult = new ArrayList<>();
+
+    public String getResult(){
+        return this.getValidationResult().stream()
+                .map(validationResult1 -> validationResult1.result)
+                .collect(Collectors.joining(" "));
+    }
     public boolean containsInPlan(Task task){
         return this.getProvidedTasks().stream()
                 .anyMatch(t -> t.getType().equals(task.getType()));
@@ -44,22 +51,14 @@ public class Plan extends Project { // Проект
             this.resultType = resultType;
             this.result = result;
         }
+        @Override
+        public String toString(){
+            return result;
+        }
     }
     public enum ResultType{
         VALID,
         NOT_VALID
-    }
-    public List<Condition> getPlanConditions(){
-        return this.getProvidedTasks()
-                .stream()
-                .filter(task -> !task.getConditions().isEmpty())
-                .flatMap(task -> task.getConditions().stream())
-                .toList();
-    }
-    public Boolean isConditionIncludedByPlan(Condition condition){
-        return this.getPlanConditions().stream()
-                .map(Condition::getType)
-                .anyMatch(type -> condition.getType().equals(type));
     }
     public Task getTaskByCondition(Condition condition){
         for (Task task: this.getTasks()){
@@ -73,7 +72,7 @@ public class Plan extends Project { // Проект
     public int indexOfTaskInPlan(Task task){
         for (Task t: this.getProvidedTasks()){
             if (t.equals(task))
-                return t.getOrder();
+                return t.getOrderByPlan();
         }
         return -1;
     }

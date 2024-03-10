@@ -24,14 +24,14 @@ public class MainControllerTest {
     @Test
     void uploadRequestTest() throws Exception {
         File file1 = new File("src/main/resources/files/p.xlsx");
-        File file2 = new File("src/main/resources/files/td.xlsx");
+        File file2 = new File("src/main/resources/files/tc.xlsx");
         final InputStream inputStream1 = FileUtils.openInputStream(file1);
         final InputStream inputStream2 = FileUtils.openInputStream(file2);
         MockMultipartFile mockMultipartFile1 = new MockMultipartFile("requestFile",
                 "p.xlsx","multipart/form-data", inputStream1
         );
         MockMultipartFile mockMultipartFile2 = new MockMultipartFile("requestFile",
-                "td.xlsx", "multipart/form-data", inputStream2
+                "tc.xlsx", "multipart/form-data", inputStream2
         );
 
         mockMvc.perform(MockMvcRequestBuilders.multipart("/request")

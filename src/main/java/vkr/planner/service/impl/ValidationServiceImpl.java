@@ -24,13 +24,18 @@ import java.util.Map;
 public class ValidationServiceImpl implements ValidationService {
     public static final String UNKNOWN_PROJECT_TYPE = "Неизвестный тип проекта";
     @Autowired
-    private RuleTypeMapper ruleTypeMapper;
+    private final RuleTypeMapper ruleTypeMapper;
     @Autowired
-    private ProjectRepository projectRepository;
+    private final ProjectRepository projectRepository;
     @Value("${project.file.name}")
     public String projectFileName;
     @Value("${technical.conditions.file.name}")
     public String technicalConditionsFileName;
+
+    public ValidationServiceImpl(RuleTypeMapper ruleTypeMapper, ProjectRepository projectRepository) {
+        this.ruleTypeMapper = ruleTypeMapper;
+        this.projectRepository = projectRepository;
+    }
 
     @Override
     public Plan validateProject(Request request) throws IOException, InvalidFormatException, UnknownTypeException {
@@ -69,7 +74,7 @@ public class ValidationServiceImpl implements ValidationService {
         return plan;
     }
     public void implementRules(Plan plan) throws UnknownTypeException {
-        for (Condition condition : plan.getPlanConditions()){
+        for (Condition condition : plan.getProvidedConditions()){
              ruleTypeMapper.getRuleServiceByRuleType(
                      condition.getType())
                     .applyRule(plan, condition);
@@ -89,6 +94,9 @@ public class ValidationServiceImpl implements ValidationService {
         int shift = 0;
 
         for (Task task: plan.getTasks()){
+
+            task.setCompletable(true);
+
             int orderByProject = task.getOrder();
             int orderByPlan = task.getOrderByPlan();
             boolean providedByRule = task.isProvidedByRule();
@@ -100,21 +108,19 @@ public class ValidationServiceImpl implements ValidationService {
 
             if (orderByPlan > orderByProject){
                 task.setCompletable(false);
-                String res = String.format("Ошибка валидации! Порядок задачи %s по плану больше номинального!", task.getType());
+                String res = String.format("Ошибка валидации! Порядок задачи '%s' неправильный!", task.getType());
                 plan.getValidationResult().add(
                         new Plan.ValidationResult(Plan.ResultType.NOT_VALID, res)
                 );
             }
 
-            if (!presentedByPlan || !providedByRule){
+            if (!(presentedByPlan || providedByRule)){
                 task.setCompletable(false);
-                String res = String.format("Ошибка валидации! Задача %s отсутствует!", task.getType());
-
+                String res = String.format("Ошибка валидации! Задача '%s' отсутствует!", task.getType());
                 plan.getValidationResult().add(
                         new Plan.ValidationResult(Plan.ResultType.NOT_VALID, res)
                 );
             }
-            task.setCompletable(true);
         }
     }
     public Plan validatePlan(Plan plan){
@@ -123,9 +129,9 @@ public class ValidationServiceImpl implements ValidationService {
 
         boolean result = plan.getTasks()
                 .stream()
-                .anyMatch(task -> !task.isCompletable());
+                .allMatch(Task::isCompletable);
 
-        if (!result)
+        if (result)
             plan.getValidationResult().add(
                     new Plan.ValidationResult(
                             Plan.ResultType.VALID, "План валиден!"

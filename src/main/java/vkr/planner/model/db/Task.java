@@ -24,7 +24,7 @@ public class Task {
     @Column(unique=true)
     private String type;
 
-    @Column
+    @Column(name = "task_order")
     private int order; // номинальный порядок
 
     @ExcelCellName("Номер")
