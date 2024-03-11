@@ -104,28 +104,36 @@ public class ValidationServiceImpl implements ValidationService {
 
         for (Task task: plan.getTasks()){
 
-            task.setCompletable(true);
+            task.setValid(true);
 
             int orderByProject = task.getOrder();
             int orderByPlan = task.getOrderByPlan();
             boolean providedByRule = task.isProvidedByRule();
             boolean presentedByPlan = task.getPresentedByPlan();
+            boolean requiredByRule = task.isRequiredByRule();
 
             if (orderByPlan == -1)
                 shift = shift + 1;
             else orderByPlan = orderByPlan + shift;
 
             if (orderByPlan > orderByProject){
-                task.setCompletable(false);
+                task.setValid(false);
                 String res = String.format("Ошибка валидации! Порядок задачи '%s' неправильный!", task.getType());
                 plan.getValidationResult().add(
                         new Plan.ValidationResult(Plan.ResultType.NOT_VALID, res)
                 );
             }
 
-            if (!(presentedByPlan || providedByRule)){
-                task.setCompletable(false);
+            if (!(presentedByPlan || providedByRule) && requiredByRule){
+                task.setValid(false);
                 String res = String.format("Ошибка валидации! Задача '%s' отсутствует!", task.getType());
+                plan.getValidationResult().add(
+                        new Plan.ValidationResult(Plan.ResultType.NOT_VALID, res)
+                );
+            }
+            if (presentedByPlan && providedByRule){
+                task.setValid(false);
+                String res = String.format("Ошибка валидации! Задача '%s' дублируется!", task.getType());
                 plan.getValidationResult().add(
                         new Plan.ValidationResult(Plan.ResultType.NOT_VALID, res)
                 );
@@ -140,7 +148,7 @@ public class ValidationServiceImpl implements ValidationService {
 
         boolean result = plan.getTasks()
                 .stream()
-                .allMatch(Task::isCompletable);
+                .allMatch(Task::isValid);
 
         if (result)
             plan.getValidationResult().add(

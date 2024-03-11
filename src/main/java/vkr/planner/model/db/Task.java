@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -54,7 +53,10 @@ public class Task {
     private boolean providedByRule = false; // Обеспечивает ли переданное условие выполнение задачи
 
     @Transient
-    private boolean completable; // Основная функция задачи
+    private boolean valid; // Основная функция задачи
+
+    @Transient
+    private boolean isRequiredByRule; // Признак того, что задача должна быть/не должна в результате применения правила (например если высота лесов > 2 метров, то нужна задача 'Ставим леса')
 
     public Task(Integer order, String type){
         this.order = order;
