@@ -44,6 +44,8 @@ public class ValidationServiceImpl implements ValidationService {
 
         Plan plan = preprocessRequest(request);
 
+        implementRules(plan);
+
         return validatePlan(plan);
     }
 
@@ -77,8 +79,6 @@ public class ValidationServiceImpl implements ValidationService {
             throw new UnknownTypeException(UNKNOWN_CONDITION_TYPE);
 
         checkPresentedTasksInPlan(plan);
-
-        implementRules(plan);
 
         return plan;
     }
